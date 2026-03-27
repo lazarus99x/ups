@@ -1,21 +1,33 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { 
-  Search, Package, MapPin, ArrowRight, Truck, Shield, Clock, 
-  Globe, Building2, CreditCard, Zap, BarChart3, Globe2,
-  ChevronRight, Play
-} from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
-import { USAHomeMap } from '../components/USAHomeMap';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  Search,
+  Package,
+  MapPin,
+  ArrowRight,
+  Truck,
+  Shield,
+  Clock,
+  Globe,
+  Building2,
+  CreditCard,
+  Zap,
+  BarChart3,
+  Globe2,
+  ChevronRight,
+  Play,
+} from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
+import { USAHomeMap } from "../components/USAHomeMap";
 
 export const Home: React.FC = () => {
-  const [trackingId, setTrackingId] = useState('');
+  const [trackingId, setTrackingId] = useState("");
   const [liveStat, setLiveStat] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setLiveStat(prev => (prev + Math.floor(Math.random() * 5) + 1));
+      setLiveStat((prev) => prev + Math.floor(Math.random() * 5) + 1);
     }, 3000);
     return () => clearInterval(interval);
   }, []);
@@ -32,26 +44,30 @@ export const Home: React.FC = () => {
       title: "Shipping",
       description: "Create a new shipment and print labels.",
       icon: <Package className="w-6 h-6" />,
-      image: "https://images.unsplash.com/photo-1566576721346-d4a3b4eaeb55?auto=format&fit=crop&q=80&w=800"
+      image:
+        "https://images.unsplash.com/photo-1566576721346-d4a3b4eaeb55?auto=format&fit=crop&q=80&w=800",
     },
     {
       title: "Tracking",
       description: "Monitor your packages in real-time.",
       icon: <MapPin className="w-6 h-6" />,
-      image: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80&w=800"
+      image:
+        "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80&w=800",
     },
     {
       title: "Billing",
       description: "Manage invoices and payment methods.",
       icon: <CreditCard className="w-6 h-6" />,
-      image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&q=80&w=800"
+      image:
+        "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&q=80&w=800",
     },
     {
       title: "International",
       description: "Global shipping and customs solutions.",
       icon: <Globe className="w-6 h-6" />,
-      image: "https://images.unsplash.com/photo-1526772662000-3f88f10405ff?auto=format&fit=crop&q=80&w=800"
-    }
+      image:
+        "https://images.unsplash.com/photo-1526772662000-3f88f10405ff?auto=format&fit=crop&q=80&w=800",
+    },
   ];
 
   return (
@@ -66,7 +82,10 @@ export const Home: React.FC = () => {
             </span>
             <span className="hidden sm:inline opacity-50">|</span>
             <span className="hidden sm:inline">
-              Live Deliveries Today: <span className="text-white">{(1245832 + liveStat).toLocaleString()}</span>
+              Live Deliveries Today:{" "}
+              <span className="text-white">
+                {(1245832 + liveStat).toLocaleString()}
+              </span>
             </span>
           </div>
           <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] opacity-80">
@@ -81,40 +100,42 @@ export const Home: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
+              className="text-center lg:text-left"
             >
-              <span className="inline-block px-4 py-1.5 bg-ups-yellow/10 text-ups-brown text-xs font-bold uppercase tracking-widest rounded-full mb-6 border border-ups-yellow/20">
+              <span className="inline-block px-4 py-1.5 bg-ups-yellow/10 text-ups-brown text-[10px] sm:text-xs font-bold uppercase tracking-widest rounded-full mb-6 border border-ups-yellow/20">
                 UPS Global Shipping
               </span>
-              <h1 className="text-6xl sm:text-8xl font-bold text-ups-brown tracking-tight leading-[0.9] mb-8">
+              <h1 className="text-4xl sm:text-6xl lg:text-8xl font-black text-ups-brown tracking-tighter leading-[0.9] mb-8">
                 Moving the <br />
                 <span className="text-ups-yellow-dark">world forward.</span>
               </h1>
-              <p className="text-xl text-gray-600 mb-12 leading-relaxed max-w-lg">
-                UPS provides real-time visibility and precision control over your logistics. 
-                Enter your tracking number below to see your package's journey.
+              <p className="text-base sm:text-xl text-gray-600 mb-8 sm:mb-12 leading-relaxed max-w-lg mx-auto lg:mx-0">
+                UPS provides real-time visibility and precision control over
+                your logistics. Enter your tracking number below to see your
+                package's journey.
               </p>
-              
-              <div className="relative max-w-xl">
+
+              <div className="relative max-w-xl mx-auto lg:mx-0">
                 <form onSubmit={handleSearch} className="relative">
-                  <div className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400">
-                    <Search className="w-6 h-6" />
+                  <div className="absolute left-4 sm:left-6 top-1/2 -translate-y-1/2 text-gray-400">
+                    <Search className="w-5 h-5 sm:w-6 sm:h-6" />
                   </div>
                   <input
                     type="text"
                     value={trackingId}
                     onChange={(e) => setTrackingId(e.target.value)}
-                    placeholder="Tracking Number (e.g. UPS-123456)"
-                    className="w-full pl-16 pr-40 py-7 bg-white border-2 border-gray-100 rounded-3xl text-lg focus:ring-4 focus:ring-ups-yellow/20 focus:border-ups-brown transition-all outline-none shadow-2xl shadow-ups-brown/5"
+                    placeholder="Tracking (e.g. UPS-123456)"
+                    className="w-full pl-12 sm:pl-16 pr-28 sm:pr-40 py-5 sm:py-7 bg-white border-2 border-gray-100 rounded-2xl sm:rounded-3xl text-sm sm:text-lg focus:ring-4 focus:ring-ups-yellow/20 focus:border-ups-brown transition-all outline-none shadow-2xl shadow-ups-brown/5"
                   />
                   <button
                     type="submit"
-                    className="absolute right-3 top-3 bottom-3 bg-ups-brown text-ups-yellow px-8 rounded-2xl font-bold hover:bg-ups-brown/90 transition-all flex items-center gap-2 group"
+                    className="absolute right-2 top-2 bottom-2 bg-ups-brown text-ups-yellow px-4 sm:px-8 rounded-xl sm:rounded-2xl font-bold hover:bg-ups-brown/90 transition-all flex items-center gap-2 group text-xs sm:text-base"
                   >
                     Track
-                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
                   </button>
                 </form>
               </div>
@@ -127,9 +148,9 @@ export const Home: React.FC = () => {
               className="relative hidden lg:block"
             >
               <div className="relative rounded-[3rem] overflow-hidden shadow-2xl border-8 border-white">
-                <img 
-                  src="https://images.unsplash.com/photo-1566576721346-d4a3b4eaeb55?auto=format&fit=crop&q=80&w=1200" 
-                  alt="UPS Logistics" 
+                <img
+                  src="https://images.unsplash.com/photo-1566576721346-d4a3b4eaeb55?auto=format&fit=crop&q=80&w=1200"
+                  alt="UPS Logistics"
                   className="w-full h-[600px] object-cover"
                   referrerPolicy="no-referrer"
                 />
@@ -142,14 +163,20 @@ export const Home: React.FC = () => {
                       </div>
                       <div>
                         <h4 className="text-white font-bold">In Transit</h4>
-                        <p className="text-white/60 text-xs">Package UPS-882910 is moving</p>
+                        <p className="text-white/60 text-xs">
+                          Package UPS-882910 is moving
+                        </p>
                       </div>
                     </div>
                     <div className="h-1.5 bg-white/20 rounded-full overflow-hidden">
-                      <motion.div 
+                      <motion.div
                         initial={{ width: "30%" }}
                         animate={{ width: "75%" }}
-                        transition={{ duration: 2, repeat: Infinity, repeatType: "reverse" }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          repeatType: "reverse",
+                        }}
                         className="h-full bg-ups-yellow"
                       />
                     </div>
@@ -169,25 +196,29 @@ export const Home: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-end justify-between mb-16">
             <div>
-              <h2 className="text-4xl font-bold text-ups-brown tracking-tight">Our Services</h2>
-              <p className="text-gray-500 mt-2">Comprehensive solutions for every shipping need.</p>
+              <h2 className="text-4xl font-bold text-ups-brown tracking-tight">
+                Our Services
+              </h2>
+              <p className="text-gray-500 mt-2">
+                Comprehensive solutions for every shipping need.
+              </p>
             </div>
             <button className="flex items-center gap-2 text-ups-brown font-bold hover:gap-3 transition-all">
               View All Services <ChevronRight className="w-5 h-5" />
             </button>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             {services.map((service, index) => (
               <motion.div
                 key={index}
                 whileHover={{ y: -10 }}
-                className="bg-white rounded-[2.5rem] overflow-hidden shadow-sm border border-gray-100 group cursor-pointer"
+                className="bg-white rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden shadow-sm border border-gray-100 group cursor-pointer"
               >
-                <div className="h-48 overflow-hidden relative">
-                  <img 
-                    src={service.image} 
-                    alt={service.title} 
+                <div className="h-40 sm:h-48 overflow-hidden relative">
+                  <img
+                    src={service.image}
+                    alt={service.title}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     referrerPolicy="no-referrer"
                   />
@@ -196,10 +227,14 @@ export const Home: React.FC = () => {
                     <span className="text-ups-brown">{service.icon}</span>
                   </div>
                 </div>
-                <div className="p-8">
-                  <h3 className="text-xl font-bold text-ups-brown mb-2">{service.title}</h3>
-                  <p className="text-gray-500 text-sm leading-relaxed mb-6">{service.description}</p>
-                  <div className="flex items-center gap-2 text-ups-brown font-bold text-sm group-hover:gap-3 transition-all">
+                <div className="p-6 sm:p-8">
+                  <h3 className="text-lg sm:text-xl font-bold text-ups-brown mb-2">
+                    {service.title}
+                  </h3>
+                  <p className="text-gray-500 text-xs sm:text-sm leading-relaxed mb-6">
+                    {service.description}
+                  </p>
+                  <div className="flex items-center gap-2 text-ups-brown font-bold text-xs sm:text-sm group-hover:gap-3 transition-all">
                     Get Started <ArrowRight className="w-4 h-4" />
                   </div>
                 </div>
@@ -213,24 +248,31 @@ export const Home: React.FC = () => {
       <section className="py-32 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-ups-brown rounded-[4rem] overflow-hidden flex flex-col lg:flex-row">
-            <div className="lg:w-1/2 p-12 sm:p-20 flex flex-col justify-center">
-              <span className="text-ups-yellow text-xs font-bold uppercase tracking-[0.3em] mb-6">Business Solutions</span>
-              <h2 className="text-4xl sm:text-6xl font-bold text-white tracking-tight leading-[1.1] mb-8">
+            <div className="lg:w-1/2 p-8 sm:p-12 lg:p-20 flex flex-col justify-center">
+              <span className="text-ups-yellow text-[10px] font-bold uppercase tracking-[0.3em] mb-4 sm:mb-6">
+                Business Solutions
+              </span>
+              <h2 className="text-3xl sm:text-5xl lg:text-6xl font-bold text-white tracking-tight leading-[1.1] mb-6 sm:mb-8">
                 Scale your business <br />
                 <span className="text-ups-yellow">with UPS technology.</span>
               </h2>
-              <p className="text-white/60 text-lg mb-12 leading-relaxed">
-                From small startups to global enterprises, our integrated technology solutions 
-                help you manage shipping, tracking, and billing all in one place.
+              <p className="text-white/60 text-base sm:text-lg mb-8 sm:mb-12 leading-relaxed">
+                From small startups to global enterprises, our integrated
+                technology solutions help you manage shipping, tracking, and
+                billing all in one place.
               </p>
-              <div className="grid sm:grid-cols-2 gap-8 mb-12">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 mb-10 sm:mb-12">
                 <div className="flex items-start gap-4">
                   <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center flex-shrink-0">
                     <BarChart3 className="text-ups-yellow w-5 h-5" />
                   </div>
                   <div>
-                    <h4 className="text-white font-bold text-sm">Advanced Analytics</h4>
-                    <p className="text-white/40 text-xs mt-1">Real-time data insights</p>
+                    <h4 className="text-white font-bold text-sm">
+                      Advanced Analytics
+                    </h4>
+                    <p className="text-white/40 text-[10px] sm:text-xs mt-1">
+                      Real-time data insights
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
@@ -238,23 +280,89 @@ export const Home: React.FC = () => {
                     <Zap className="text-ups-yellow w-5 h-5" />
                   </div>
                   <div>
-                    <h4 className="text-white font-bold text-sm">API Integration</h4>
-                    <p className="text-white/40 text-xs mt-1">Seamless workflow sync</p>
+                    <h4 className="text-white font-bold text-sm">
+                      API Integration
+                    </h4>
+                    <p className="text-white/40 text-[10px] sm:text-xs mt-1">
+                      Seamless workflow sync
+                    </p>
                   </div>
                 </div>
               </div>
-              <button className="bg-ups-yellow text-ups-brown px-10 py-5 rounded-2xl font-bold hover:bg-white transition-all w-fit">
+              <button className="bg-ups-yellow text-ups-brown px-8 sm:px-10 py-4 sm:py-5 rounded-xl sm:rounded-2xl font-bold hover:bg-white transition-all w-full sm:w-fit">
                 Explore Solutions
               </button>
             </div>
-            <div className="lg:w-1/2 relative min-h-[400px]">
-              <img 
-                src="https://images.unsplash.com/photo-1551288049-bbbda536339a?auto=format&fit=crop&q=80&w=1200" 
-                alt="Business Solutions" 
-                className="absolute inset-0 w-full h-full object-cover"
-                referrerPolicy="no-referrer"
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-ups-brown to-transparent lg:block hidden" />
+            <div className="lg:w-1/2 relative min-h-[400px] lg:min-h-full bg-ups-brown-dark/20 flex items-center justify-center p-8 lg:p-0">
+              <div className="relative w-full max-w-md aspect-video lg:aspect-square lg:w-full lg:h-full lg:max-w-none">
+                <img
+                  src="https://images.unsplash.com/photo-1551288049-bbbda536339a?auto=format&fit=crop&q=80&w=1200"
+                  alt="Business Solutions"
+                  className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-overlay"
+                  referrerPolicy="no-referrer"
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-ups-brown via-ups-brown/40 to-transparent lg:block hidden" />
+
+                {/* Floating Metrics Cards - Enrichment */}
+                <div className="absolute inset-0 flex items-center justify-center p-6 lg:p-12">
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    className="relative w-full h-full border border-white/10 rounded-3xl bg-white/5 backdrop-blur-xl p-6 sm:p-10 flex flex-col justify-between overflow-hidden group shadow-2xl"
+                  >
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <p className="text-ups-yellow text-[10px] font-black uppercase tracking-widest mb-1">
+                          Global Status
+                        </p>
+                        <h4 className="text-white font-bold text-xl">
+                          Active Network
+                        </h4>
+                      </div>
+                      <div className="w-10 h-10 bg-ups-yellow/20 rounded-xl flex items-center justify-center text-ups-yellow animate-pulse">
+                        <Globe2 className="w-5 h-5" />
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div className="flex items-end justify-between">
+                        <span className="text-white/40 text-[10px] font-bold uppercase tracking-widest leading-none">
+                          Efficiency
+                        </span>
+                        <span className="text-ups-yellow font-black text-2xl leading-none">
+                          99.2%
+                        </span>
+                      </div>
+                      <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          whileInView={{ width: "99.2%" }}
+                          transition={{ duration: 1.5, delay: 0.5 }}
+                          className="h-full bg-ups-yellow shadow-[0_0_15px_rgba(255,181,0,0.5)]"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="p-3 bg-white/5 rounded-2xl border border-white/5">
+                        <p className="text-white/40 text-[8px] font-bold uppercase mb-1">
+                          Total Assets
+                        </p>
+                        <p className="text-white font-bold">1.2M+</p>
+                      </div>
+                      <div className="p-3 bg-white/5 rounded-2xl border border-white/5">
+                        <p className="text-white/40 text-[8px] font-bold uppercase mb-1">
+                          Active Hubs
+                        </p>
+                        <p className="text-white font-bold">542</p>
+                      </div>
+                    </div>
+
+                    {/* Decorative scanning line */}
+                    <div className="absolute top-0 left-0 w-full h-20 bg-gradient-to-b from-ups-yellow/10 to-transparent -translate-y-full group-hover:translate-y-[400%] transition-transform duration-[3s] ease-linear" />
+                  </motion.div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -264,38 +372,58 @@ export const Home: React.FC = () => {
       <section className="py-24 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-20">
-            <h2 className="text-4xl font-bold text-ups-brown tracking-tight mb-4">Global Network</h2>
-            <p className="text-gray-500">Connecting every corner of the globe with unparalleled precision.</p>
+            <h2 className="text-4xl font-bold text-ups-brown tracking-tight mb-4">
+              Global Network
+            </h2>
+            <p className="text-gray-500">
+              Connecting every corner of the globe with unparalleled precision.
+            </p>
           </div>
-          
+
           <div className="relative h-[500px] rounded-[3rem] overflow-hidden bg-gray-100 border border-gray-200">
-            <img 
-              src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=1600" 
-              alt="Global Network" 
+            <img
+              src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=1600"
+              alt="Global Network"
               className="w-full h-full object-cover opacity-50 grayscale"
               referrerPolicy="no-referrer"
             />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-12 sm:gap-24">
+            <div className="absolute inset-0 flex items-center justify-center p-6 sm:p-0">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-8 sm:gap-12 md:gap-24">
                 <div className="text-center">
-                  <div className="text-5xl font-bold text-ups-brown mb-2">220+</div>
-                  <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Countries</div>
+                  <div className="text-3xl sm:text-5xl font-black text-ups-brown mb-2 tracking-tighter">
+                    220+
+                  </div>
+                  <div className="text-[8px] sm:text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                    Countries
+                  </div>
                 </div>
                 <div className="text-center">
-                  <div className="text-5xl font-bold text-ups-brown mb-2">500k</div>
-                  <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Employees</div>
+                  <div className="text-3xl sm:text-5xl font-black text-ups-brown mb-2 tracking-tighter">
+                    500k
+                  </div>
+                  <div className="text-[8px] sm:text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                    Employees
+                  </div>
                 </div>
                 <div className="text-center">
-                  <div className="text-5xl font-bold text-ups-brown mb-2">12M</div>
-                  <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Daily Packages</div>
+                  <div className="text-3xl sm:text-5xl font-black text-ups-brown mb-2 tracking-tighter">
+                    12M
+                  </div>
+                  <div className="text-[8px] sm:text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                    Packages
+                  </div>
                 </div>
                 <div className="text-center">
-                  <div className="text-5xl font-bold text-ups-brown mb-2">24/7</div>
-                  <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Operations</div>
+                  <div className="text-3xl sm:text-5xl font-black text-ups-brown mb-2 tracking-tighter">
+                    24/7
+                  </div>
+                  <div className="text-[8px] sm:text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                    Operations
+                  </div>
                 </div>
               </div>
             </div>
-            
+
             {/* Pulsing dots for "live" feel */}
             <div className="absolute top-1/4 left-1/3 w-3 h-3 bg-ups-yellow rounded-full animate-ping" />
             <div className="absolute top-1/2 right-1/4 w-3 h-3 bg-ups-yellow rounded-full animate-ping delay-700" />
@@ -309,18 +437,20 @@ export const Home: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white rounded-[3rem] p-12 sm:p-20 shadow-xl border border-gray-100 flex flex-col lg:flex-row items-center gap-16">
             <div className="lg:w-1/2">
-              <h2 className="text-4xl font-bold text-ups-brown tracking-tight mb-6">Find a UPS Location</h2>
+              <h2 className="text-4xl font-bold text-ups-brown tracking-tight mb-6">
+                Find a UPS Location
+              </h2>
               <p className="text-gray-600 mb-10 leading-relaxed">
-                Drop off your packages, pick up supplies, or get expert shipping advice at one of our 
-                thousands of locations worldwide.
+                Drop off your packages, pick up supplies, or get expert shipping
+                advice at one of our thousands of locations worldwide.
               </p>
               <div className="relative">
-                <input 
-                  type="text" 
-                  placeholder="City, State, or Zip Code" 
-                  className="w-full pl-6 pr-40 py-5 bg-gray-50 border-2 border-transparent rounded-2xl focus:border-ups-brown focus:bg-white transition-all outline-none"
+                <input
+                  type="text"
+                  placeholder="City, State, or Zip"
+                  className="w-full pl-6 pr-28 sm:pr-40 py-4 sm:py-5 bg-gray-50 border-2 border-transparent rounded-xl sm:rounded-2xl focus:border-ups-brown focus:bg-white transition-all outline-none text-sm sm:text-base"
                 />
-                <button className="absolute right-2 top-2 bottom-2 bg-ups-brown text-ups-yellow px-6 rounded-xl font-bold hover:bg-ups-brown/90 transition-all">
+                <button className="absolute right-2 top-2 bottom-2 bg-ups-brown text-ups-yellow px-4 sm:px-6 rounded-lg sm:rounded-xl font-bold hover:bg-ups-brown/90 transition-all text-sm sm:text-base">
                   Find
                 </button>
               </div>
@@ -349,9 +479,9 @@ export const Home: React.FC = () => {
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="order-2 lg:order-1 relative">
               <div className="relative z-10 rounded-[3rem] overflow-hidden shadow-2xl border-8 border-gray-100">
-                <img 
-                  src="https://images.unsplash.com/photo-1512428559087-560fa5ceab42?auto=format&fit=crop&q=80&w=800" 
-                  alt="UPS Mobile App" 
+                <img
+                  src="https://images.unsplash.com/photo-1512428559087-560fa5ceab42?auto=format&fit=crop&q=80&w=800"
+                  alt="UPS Mobile App"
                   className="w-full h-[600px] object-cover"
                   referrerPolicy="no-referrer"
                 />
@@ -359,32 +489,20 @@ export const Home: React.FC = () => {
               <div className="absolute -bottom-10 -right-10 w-64 h-64 bg-ups-yellow rounded-full blur-3xl opacity-20 -z-10" />
             </div>
             <div className="order-1 lg:order-2">
-              <span className="text-ups-brown text-xs font-bold uppercase tracking-[0.3em] mb-6 block">Mobile Experience</span>
+              <span className="text-ups-brown text-xs font-bold uppercase tracking-[0.3em] mb-6 block">
+                Unbeatable Experience
+              </span>
               <h2 className="text-4xl sm:text-6xl font-bold text-ups-brown tracking-tight leading-[1.1] mb-8">
                 Track on the go <br />
-                <span className="text-ups-yellow-dark">with our mobile app.</span>
               </h2>
               <p className="text-gray-600 text-lg mb-10 leading-relaxed">
-                Get real-time notifications, find nearby locations, and manage your shipments 
-                anytime, anywhere with the UPS Mobile App.
+                Get real-time notifications, find nearby locations, and manage
+                your shipments anytime, anywhere.
               </p>
               <div className="flex flex-wrap gap-4">
                 <div className="bg-ups-brown text-white px-8 py-4 rounded-2xl flex items-center gap-3 cursor-pointer hover:bg-ups-brown/90 transition-all">
                   <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
-                    <Play className="w-4 h-4 fill-white" />
-                  </div>
-                  <div className="text-left">
-                    <div className="text-[10px] uppercase font-bold opacity-60">Get it on</div>
-                    <div className="text-sm font-bold">Google Play</div>
-                  </div>
-                </div>
-                <div className="bg-ups-brown text-white px-8 py-4 rounded-2xl flex items-center gap-3 cursor-pointer hover:bg-ups-brown/90 transition-all">
-                  <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
                     <Zap className="w-4 h-4" />
-                  </div>
-                  <div className="text-left">
-                    <div className="text-[10px] uppercase font-bold opacity-60">Download on the</div>
-                    <div className="text-sm font-bold">App Store</div>
                   </div>
                 </div>
               </div>
@@ -397,19 +515,10 @@ export const Home: React.FC = () => {
       <section className="py-24 bg-ups-yellow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl sm:text-5xl font-bold text-ups-brown tracking-tight mb-8">
-            Ready to start shipping?
+            Only the best Service in the world
           </h2>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button className="bg-ups-brown text-ups-yellow px-10 py-5 rounded-2xl font-bold hover:bg-ups-brown/90 transition-all w-full sm:w-auto">
-              Create a Shipment
-            </button>
-            <button className="bg-white text-ups-brown px-10 py-5 rounded-2xl font-bold hover:bg-gray-50 transition-all w-full sm:w-auto border border-ups-brown/10">
-              Open an Account
-            </button>
-          </div>
         </div>
       </section>
     </div>
   );
 };
-

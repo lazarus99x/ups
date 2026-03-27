@@ -1,5 +1,5 @@
 {
-  "name": "UPS - United Parcel Service",
+  "name": "UPS United Parcel Service",
   "description": "Track your shipments, find locations, and explore shipping solutions with UPS.",
   "requestFramePermissions": ["geolocation"]
 }

@@ -265,24 +265,25 @@ export const ShipmentDetail: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
       {/* ── Header ── */}
-      <div className="bg-white border-b border-gray-100 py-8">
+      <div className="bg-white border-b border-gray-100 py-6 sm:py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
-            <div className="flex items-center gap-4">
-              <Link to="/" className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-8 sm:mb-10 text-center sm:text-left">
+            <div className="flex flex-col sm:flex-row items-center gap-4">
+              <Link to="/" className="p-2 hover:bg-gray-100 rounded-full transition-colors order-2 sm:order-1">
                 <ArrowLeft className="w-5 h-5" />
               </Link>
-              <div>
-                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Tracking Details</p>
-                <div className="flex items-center gap-3">
-                  <h1 className="text-2xl font-black text-ups-brown tracking-tight">{shipment.trackingNumber}</h1>
-                  <span className={cn('px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide', statusConfig.badge)}>
+              <div className="order-1 sm:order-2">
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Tracking Details</p>
+                <div className="flex flex-col sm:flex-row items-center gap-3">
+                  <h1 className="text-xl sm:text-2xl font-black text-ups-brown tracking-tight">{shipment.trackingNumber}</h1>
+                  <span className={cn('px-3 py-1 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wide', statusConfig.badge)}>
                     {statusConfig.label}
                   </span>
                 </div>
               </div>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center justify-center gap-2">
+
               <button className="p-3 bg-white border border-gray-200 rounded-2xl hover:bg-gray-50 transition-all">
                 <Share2 className="w-5 h-5 text-gray-500" />
               </button>
@@ -297,39 +298,42 @@ export const ShipmentDetail: React.FC = () => {
           </div>
 
           {/* Progress Steps */}
-          <div className="relative max-w-4xl">
-            <div className="absolute top-4 left-0 right-0 h-1 bg-gray-100 rounded-full" />
-            <div
-              className="absolute top-4 left-0 h-1 bg-ups-yellow rounded-full transition-all duration-1000"
-              style={{ width: `${(stepIndex / (steps.length - 1)) * 100}%` }}
-            />
-            <div className="relative flex justify-between">
-              {steps.map((step, i) => {
-                const done = i < stepIndex;
-                const active = i === stepIndex;
-                return (
-                  <div key={step} className="flex flex-col items-center">
-                    <div className={cn(
-                      'w-9 h-9 rounded-full flex items-center justify-center border-4 border-white shadow-md z-10 text-xs font-bold transition-all',
-                      done ? 'bg-ups-yellow text-ups-brown' :
-                      active ? 'bg-ups-brown text-ups-yellow' : 'bg-gray-200 text-gray-400'
-                    )}>
-                      {done ? <CheckCircle2 className="w-5 h-5" /> : i + 1}
+          <div className="relative max-w-4xl py-6 overflow-x-auto sm:overflow-visible no-scrollbar">
+            <div className="min-w-[400px] sm:min-w-0 pr-4 sm:pr-0">
+              <div className="absolute top-4 left-0 right-0 h-1 bg-gray-100 rounded-full" />
+              <div
+                className="absolute top-4 left-0 h-1 bg-ups-yellow rounded-full transition-all duration-1000"
+                style={{ width: `${(stepIndex / (steps.length - 1)) * 100}%` }}
+              />
+              <div className="relative flex justify-between">
+                {steps.map((step, i) => {
+                  const done = i < stepIndex;
+                  const active = i === stepIndex;
+                  return (
+                    <div key={step} className="flex flex-col items-center gap-2">
+                      <div className={cn(
+                        'w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center border-4 border-white shadow-md z-10 text-[10px] sm:text-xs font-bold transition-all',
+                        done ? 'bg-ups-yellow text-ups-brown' :
+                        active ? 'bg-ups-brown text-ups-yellow' : 'bg-gray-200 text-gray-400'
+                      )}>
+                        {done ? <CheckCircle2 className="w-5 h-5" /> : i + 1}
+                      </div>
+                      <span className={cn('text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-center max-w-[72px]',
+                        active || done ? 'text-ups-brown' : 'text-gray-300'
+                      )}>{step}</span>
                     </div>
-                    <span className={cn('mt-3 text-[10px] font-bold uppercase tracking-wide text-center max-w-[72px]',
-                      active || done ? 'text-ups-brown' : 'text-gray-400'
-                    )}>{step}</span>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       {/* ── Body ── */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
-        <div className="grid lg:grid-cols-3 gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 sm:mt-10">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 items-start">
+
 
           {/* LEFT — Map + Stats + History */}
           <div className="lg:col-span-2 space-y-8">
@@ -355,21 +359,27 @@ export const ShipmentDetail: React.FC = () => {
             </div>
 
             {/* Stats Row */}
-            <div className="grid sm:grid-cols-3 gap-4">
-              <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
-                <CalendarDays className="text-gray-300 w-6 h-6 mb-3" />
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Est. Delivery</p>
-                <p className="font-bold text-gray-900">{format(new Date(shipment.estimatedDelivery), 'MMM dd, yyyy')}</p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="bg-white p-5 rounded-3xl border border-gray-100 shadow-sm flex items-center sm:flex-col sm:items-start gap-4 sm:gap-0">
+                <CalendarDays className="text-gray-200 w-8 h-8 sm:mb-3" />
+                <div>
+                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Est. Delivery</p>
+                  <p className="font-black text-ups-brown text-sm sm:text-base">{format(new Date(shipment.estimatedDelivery), 'MMM dd, yyyy')}</p>
+                </div>
               </div>
-              <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
-                <Box className="text-gray-300 w-6 h-6 mb-3" />
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Origin</p>
-                <p className="font-bold text-gray-900">{shipment.origin}</p>
+              <div className="bg-white p-5 rounded-3xl border border-gray-100 shadow-sm flex items-center sm:flex-col sm:items-start gap-4 sm:gap-0">
+                <Box className="text-gray-200 w-8 h-8 sm:mb-3" />
+                <div>
+                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Origin</p>
+                  <p className="font-black text-ups-brown text-sm sm:text-base truncate max-w-[150px]">{shipment.origin}</p>
+                </div>
               </div>
-              <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
-                <MapPin className="text-gray-300 w-6 h-6 mb-3" />
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Destination</p>
-                <p className="font-bold text-gray-900">{shipment.destination}</p>
+              <div className="bg-white p-5 rounded-3xl border border-gray-100 shadow-sm flex items-center sm:flex-col sm:items-start gap-4 sm:gap-0">
+                <MapPin className="text-gray-200 w-8 h-8 sm:mb-3" />
+                <div>
+                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Destination</p>
+                  <p className="font-black text-ups-brown text-sm sm:text-base truncate max-w-[150px]">{shipment.destination}</p>
+                </div>
               </div>
             </div>
 
@@ -416,34 +426,34 @@ export const ShipmentDetail: React.FC = () => {
             )}
 
             {/* History Timeline */}
-            <div className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-sm">
-              <h3 className="text-lg font-bold mb-8 flex items-center gap-2 text-ups-brown">
-                <Truck className="w-5 h-5" /> Shipment History
-                <span className="ml-auto text-xs text-gray-400 font-normal">{shipment.history.length} events</span>
+            <div className="bg-white p-6 sm:p-10 rounded-[2.5rem] border border-gray-100 shadow-sm">
+              <h3 className="text-base sm:text-lg font-black mb-8 flex items-center gap-2 text-ups-brown uppercase tracking-tighter">
+                <Truck className="w-5 h-5 text-ups-yellow-dark" /> Shipment Activity
+                <span className="ml-auto text-[10px] text-gray-400 font-bold uppercase tracking-widest">{shipment.history.length} events</span>
               </h3>
-              <div className="relative space-y-8 before:absolute before:left-4 before:top-2 before:bottom-2 before:w-0.5 before:bg-gray-100">
+              <div className="relative space-y-8 sm:space-y-10 before:absolute before:left-4 sm:before:left-5 before:top-2 before:bottom-2 before:w-0.5 before:bg-gradient-to-b before:from-ups-brown/20 before:to-transparent">
                 {shipment.history.map((item, index) => (
-                  <div key={index} className="relative pl-12">
+                  <div key={index} className="relative pl-12 sm:pl-16 group">
                     <div className={cn(
-                      'absolute left-0 top-1 w-8 h-8 rounded-full flex items-center justify-center z-10 shadow-sm',
-                      index === 0 ? `${statusConfig.dot} text-white` : 'bg-white border-2 border-gray-200'
+                      'absolute left-0 top-1 w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center z-10 shadow-sm transition-all duration-500 group-hover:scale-110',
+                      index === 0 ? `bg-ups-brown text-ups-yellow shadow-lg shadow-ups-brown/20` : 'bg-white border-2 border-gray-100 text-gray-300'
                     )}>
                       {index === 0
-                        ? <CheckCircle2 className="w-4 h-4" />
-                        : <div className="w-2 h-2 bg-gray-300 rounded-full" />
+                        ? <CheckCircle2 className="w-4 h-4 sm:w-5 h-5" />
+                        : <div className="w-2 h-2 bg-gray-200 rounded-full" />
                       }
                     </div>
-                    <div className="pb-2">
-                      <div className="flex items-start justify-between gap-4 mb-1">
-                        <p className="font-bold text-gray-900 text-sm">{item.status}</p>
-                        <time className="text-xs text-gray-400 font-medium whitespace-nowrap">
-                          {format(new Date(item.timestamp), 'MMM dd, yyyy – HH:mm')}
+                    <div>
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+                        <p className="font-black text-ups-brown text-sm sm:text-base leading-none">{item.status}</p>
+                        <time className="text-[10px] sm:text-xs font-bold text-gray-400 uppercase tracking-widest">
+                          {format(new Date(item.timestamp), 'MMM dd, HH:mm')}
                         </time>
                       </div>
-                      <p className="text-xs text-gray-500 flex items-center gap-1 mb-1">
-                        <MapPin className="w-3 h-3" />{item.location}
+                      <p className="text-[10px] sm:text-xs font-bold text-gray-400 flex items-center gap-1.5 mb-2">
+                        <MapPin className="w-3 h-3 text-ups-yellow-dark" />{item.location}
                       </p>
-                      <p className="text-sm text-gray-600">{item.description}</p>
+                      <p className="text-xs sm:text-sm text-gray-500 leading-relaxed sm:max-w-2xl">{item.description}</p>
                     </div>
                   </div>
                 ))}

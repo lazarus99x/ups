@@ -334,10 +334,11 @@ export const Admin: React.FC = () => {
         </div>
       </div>
 
-      {/* Table */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
-        <div className="bg-white rounded-[2rem] border border-gray-100 shadow-sm overflow-hidden">
-          <div className="overflow-x-auto">
+      {/* Shipments List */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 sm:mt-10">
+        <div className="bg-white rounded-3xl sm:rounded-[2rem] border border-gray-100 shadow-sm overflow-hidden">
+          {/* Desktop Table - Hidden on Mobile */}
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full text-left">
               <thead>
                 <tr className="bg-gray-50 border-b border-gray-100">
@@ -355,7 +356,7 @@ export const Admin: React.FC = () => {
                 ) : shipments.length === 0 ? (
                   <tr><td colSpan={6} className="px-6 py-16 text-center">
                     <Package className="w-12 h-12 text-gray-200 mx-auto mb-3" />
-                    <p className="text-gray-400 font-medium">No shipments yet. Create your first one!</p>
+                    <p className="text-gray-400 font-medium">No shipments yet.</p>
                   </td></tr>
                 ) : shipments.map((s) => (
                   <tr key={s.id} className="hover:bg-gray-50/50 transition-colors group">
@@ -400,14 +401,13 @@ export const Admin: React.FC = () => {
                         <button
                           onClick={() => openUpdateModal(s)}
                           className="p-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-all"
-                          title="Update Shipment"
+                          title="Update"
                         >
                           <Edit2 className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => setSimulatingId(simulatingId === s.id ? null : s.id)}
                           className={cn("p-2 rounded-lg transition-all", simulatingId === s.id ? "bg-amber-100 text-amber-600" : "bg-gray-100 text-gray-500 hover:bg-gray-200")}
-                          title={simulatingId === s.id ? "Stop Simulation" : "Simulate Movement"}
                         >
                           {simulatingId === s.id ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
                         </button>
@@ -424,24 +424,98 @@ export const Admin: React.FC = () => {
               </tbody>
             </table>
           </div>
+
+          {/* Mobile Card List - Visible ONLY on Mobile */}
+          <div className="md:hidden divide-y divide-gray-50">
+            {loading ? (
+              <div className="p-12 text-center text-gray-400">Loading...</div>
+            ) : shipments.length === 0 ? (
+              <div className="p-12 text-center text-gray-400">No shipments found.</div>
+            ) : shipments.map((s) => (
+              <div key={s.id} className="p-6 space-y-4">
+                <div className="flex justify-between items-start">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-ups-brown text-ups-yellow rounded-xl flex items-center justify-center">
+                      <Package className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <p className="font-black text-ups-brown text-sm">{s.trackingNumber}</p>
+                      <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">{format(new Date(s.createdAt), 'MMM dd, yyyy')}</p>
+                    </div>
+                  </div>
+                  <span className={cn(
+                    "px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-widest",
+                    s.status === 'Active' ? 'bg-blue-50 text-blue-700' :
+                    s.status === 'Delivered' ? 'bg-emerald-50 text-emerald-700' :
+                    s.status === 'On Hold' ? 'bg-amber-50 text-amber-700' :
+                    'bg-red-50 text-red-700'
+                  )}>{s.status}</span>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex justify-between text-xs">
+                    <span className="text-gray-400 font-bold uppercase">Receiver</span>
+                    <span className="font-bold text-gray-900">{s.receiverName}</span>
+                  </div>
+                  <div className="flex justify-between text-xs">
+                    <span className="text-gray-400 font-bold uppercase">Route</span>
+                    <span className="font-medium text-gray-500">{s.origin} → {s.destination}</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-[10px] text-gray-400">
+                    <MapPin className="w-3 h-3 text-ups-yellow-dark" />
+                    <span className="truncate">{s.currentLocation.address}</span>
+                  </div>
+                </div>
+
+                <div className="flex gap-2 pt-2">
+                  <button
+                    onClick={() => openUpdateModal(s)}
+                    className="flex-1 py-3 bg-blue-50 text-blue-600 rounded-xl font-bold text-xs flex items-center justify-center gap-2"
+                  >
+                    <Edit2 className="w-3.5 h-3.5" /> Update
+                  </button>
+                  <button
+                    onClick={() => setSimulatingId(simulatingId === s.id ? null : s.id)}
+                    className={cn(
+                      "flex-1 py-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2",
+                      simulatingId === s.id ? "bg-amber-100 text-amber-600" : "bg-gray-100 text-gray-500"
+                    )}
+                  >
+                    {simulatingId === s.id ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />} Move
+                  </button>
+                  <button
+                    onClick={() => handleDelete(s.id)}
+                    className="w-12 py-3 bg-red-50 text-red-500 rounded-xl flex items-center justify-center"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
       {/* ─────────── CREATE SHIPMENT MODAL ─────────── */}
       {showAddModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] flex items-start justify-center p-4 overflow-y-auto">
-          <div className="bg-white w-full max-w-3xl rounded-[2.5rem] shadow-2xl overflow-hidden my-8 mb-20">
-            <div className="p-8 bg-ups-brown text-ups-yellow flex justify-between items-center">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-[100] flex items-center justify-center sm:p-4 p-0 overflow-y-auto">
+          <div className="bg-white w-full max-w-3xl sm:rounded-[2.5rem] rounded-none shadow-2xl overflow-hidden min-h-screen sm:min-h-0 sm:my-8 mb-0 flex flex-col">
+            <div className="p-6 sm:p-8 bg-ups-brown text-ups-yellow flex justify-between items-center sticky top-0 z-10">
               <div>
-                <h2 className="text-2xl font-bold">New Shipment</h2>
-                <p className="text-ups-yellow/70 text-sm mt-1">Fill in all details to generate a tracking record.</p>
+                <h2 className="text-xl sm:text-2xl font-bold leading-tight">New Shipment</h2>
+                <p className="text-ups-yellow/70 text-xs sm:text-sm mt-0.5">Generate a tracking record instantly.</p>
               </div>
-              <button onClick={() => setShowAddModal(false)} className="p-2 hover:bg-white/10 rounded-full transition-colors">
+              <button 
+                onClick={() => setShowAddModal(false)} 
+                className="p-2 bg-white/10 hover:bg-white/20 rounded-xl transition-colors"
+                title="Close"
+              >
                 <X className="w-6 h-6" />
               </button>
             </div>
 
-            <form onSubmit={handleCreate} className="p-8 space-y-8">
+            <form onSubmit={handleCreate} className="p-6 sm:p-8 space-y-8 flex-1 overflow-y-auto pb-32 sm:pb-8">
+
               {/* Tracking ID */}
               <div className="flex items-center gap-4 p-4 bg-ups-brown/5 rounded-2xl border border-ups-brown/10">
                 <Hash className="w-5 h-5 text-ups-brown" />
@@ -453,10 +527,10 @@ export const Admin: React.FC = () => {
 
               {/* Sender Section */}
               <div>
-                <h3 className="text-sm font-black text-ups-brown uppercase tracking-widest mb-4 flex items-center gap-2">
+                <h3 className="text-xs font-black text-ups-brown uppercase tracking-widest mb-4 flex items-center gap-2 bg-gray-50 p-2 rounded-lg">
                   <Building className="w-4 h-4" /> Sender Details
                 </h3>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div><label className={labelCls}>Full Name</label><input className={inputCls} required placeholder="Jane Smith" value={newShipment.senderName} onChange={e => setNewShipment({...newShipment, senderName: e.target.value})} /></div>
                   <div><label className={labelCls}>Email</label><input type="email" className={inputCls} placeholder="jane@company.com" value={newShipment.senderEmail} onChange={e => setNewShipment({...newShipment, senderEmail: e.target.value})} /></div>
                   <div><label className={labelCls}>Phone</label><input className={inputCls} placeholder="+1 555 000 0000" value={newShipment.senderPhone} onChange={e => setNewShipment({...newShipment, senderPhone: e.target.value})} /></div>
@@ -468,10 +542,10 @@ export const Admin: React.FC = () => {
 
               {/* Receiver Section */}
               <div>
-                <h3 className="text-sm font-black text-ups-brown uppercase tracking-widest mb-4 flex items-center gap-2">
+                <h3 className="text-xs font-black text-ups-brown uppercase tracking-widest mb-4 flex items-center gap-2 bg-gray-50 p-2 rounded-lg">
                   <User className="w-4 h-4" /> Recipient Details
                 </h3>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div><label className={labelCls}>Full Name</label><input className={inputCls} required placeholder="John Doe" value={newShipment.receiverName} onChange={e => setNewShipment({...newShipment, receiverName: e.target.value})} /></div>
                   <div><label className={labelCls}>Email</label><input type="email" className={inputCls} required placeholder="john@email.com" value={newShipment.receiverEmail} onChange={e => setNewShipment({...newShipment, receiverEmail: e.target.value})} /></div>
                   <div><label className={labelCls}>Phone</label><input className={inputCls} placeholder="+44 7700 000000" value={newShipment.receiverPhone} onChange={e => setNewShipment({...newShipment, receiverPhone: e.target.value})} /></div>
@@ -483,10 +557,10 @@ export const Admin: React.FC = () => {
 
               {/* Package Details */}
               <div>
-                <h3 className="text-sm font-black text-ups-brown uppercase tracking-widest mb-4 flex items-center gap-2">
+                <h3 className="text-xs font-black text-ups-brown uppercase tracking-widest mb-4 flex items-center gap-2 bg-gray-50 p-2 rounded-lg">
                   <Box className="w-4 h-4" /> Package Details
                 </h3>
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
                     <label className={labelCls}>Initial Status</label>
                     <select className={inputCls} value={newShipment.status} onChange={e => setNewShipment({...newShipment, status: e.target.value as ShipmentStatus})}>
@@ -495,7 +569,7 @@ export const Admin: React.FC = () => {
                   </div>
                   <div><label className={labelCls}>Weight (kg)</label><input className={inputCls} placeholder="2.5" value={newShipment.weight} onChange={e => setNewShipment({...newShipment, weight: e.target.value})} /></div>
                   <div><label className={labelCls}>Est. Delivery (days)</label><input type="number" className={inputCls} min="1" max="60" value={newShipment.estimatedDeliveryDays} onChange={e => setNewShipment({...newShipment, estimatedDeliveryDays: e.target.value})} /></div>
-                  <div className="col-span-3"><label className={labelCls}>Package Description</label><textarea className={inputCls} rows={2} placeholder="e.g. Electronics, Documents, Clothing..." value={newShipment.description} onChange={e => setNewShipment({...newShipment, description: e.target.value})} /></div>
+                  <div className="sm:col-span-3"><label className={labelCls}>Package Description</label><textarea className={inputCls} rows={2} placeholder="e.g. Electronics, Documents..." value={newShipment.description} onChange={e => setNewShipment({...newShipment, description: e.target.value})} /></div>
                 </div>
               </div>
 
@@ -612,18 +686,23 @@ export const Admin: React.FC = () => {
 
       {/* ─────────── UPDATE SHIPMENT MODAL ─────────── */}
       {editingShipment && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] flex items-start justify-center p-4 overflow-y-auto">
-          <div className="bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl overflow-hidden my-8 mb-20">
-            <div className="p-8 bg-ups-brown text-ups-yellow flex justify-between items-center">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-[100] flex items-center justify-center sm:p-4 p-0 overflow-y-auto">
+          <div className="bg-white w-full max-w-lg sm:rounded-[2.5rem] rounded-none shadow-2xl overflow-hidden min-h-screen sm:min-h-0 sm:my-8 mb-0 flex flex-col">
+            <div className="p-6 sm:p-8 bg-ups-brown text-ups-yellow flex justify-between items-center sticky top-0 z-10 shadow-lg">
               <div>
-                <h2 className="text-xl font-bold">Update Shipment</h2>
-                <p className="text-ups-yellow/70 text-sm mt-1 font-mono">{editingShipment.trackingNumber}</p>
+                <h2 className="text-xl sm:text-2xl font-bold leading-tight">Update Shipment</h2>
+                <p className="text-ups-yellow/70 text-xs sm:text-sm mt-0.5 font-mono">{editingShipment.trackingNumber}</p>
               </div>
-              <button onClick={() => setEditingShipment(null)} className="p-2 hover:bg-white/10 rounded-full transition-colors">
+              <button 
+                onClick={() => setEditingShipment(null)} 
+                className="p-2 bg-white/10 hover:bg-white/20 rounded-xl transition-colors"
+                title="Close"
+              >
                 <X className="w-6 h-6" />
               </button>
             </div>
-            <form onSubmit={handleUpdate} className="p-8 space-y-5">
+            <form onSubmit={handleUpdate} className="p-6 sm:p-8 space-y-6 flex-1 overflow-y-auto pb-32 sm:pb-8">
+
               <div>
                 <label className={labelCls}>New Status</label>
                 <select className={inputCls} value={updateForm.status} onChange={e => setUpdateForm({...updateForm, status: e.target.value as ShipmentStatus})}>
@@ -724,16 +803,16 @@ export const Admin: React.FC = () => {
 
               {/* Optional Charges */}
               <div>
-                <div className="flex items-center justify-between mb-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
                   <h3 className="text-sm font-black text-ups-brown uppercase tracking-widest flex items-center gap-2">
                     <DollarSign className="w-4 h-4" /> Invoice Charges
                   </h3>
                   <button
                     type="button"
                     onClick={() => addCharge(true)}
-                    className="text-xs font-bold text-blue-600 hover:text-blue-700 bg-blue-50 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5"
+                    className="w-full sm:w-auto text-xs font-bold text-blue-600 hover:text-blue-700 bg-blue-50 px-4 py-2.5 rounded-xl transition-colors flex items-center justify-center gap-1.5 border border-blue-100"
                   >
-                    <Plus className="w-3 h-3" /> Add Charge
+                    <Plus className="w-4 h-4" /> Add Charge
                   </button>
                 </div>
                 
@@ -785,9 +864,9 @@ export const Admin: React.FC = () => {
               <button
                 type="submit"
                 disabled={photoUploading}
-                className="w-full bg-ups-brown text-ups-yellow py-4 rounded-2xl font-bold hover:bg-ups-brown/90 transition-all flex items-center justify-center gap-2 border border-ups-yellow/10 disabled:opacity-60"
+                className="w-full bg-ups-brown text-ups-yellow py-4 sm:py-5 rounded-xl sm:rounded-2xl font-bold hover:bg-ups-brown/90 transition-all flex items-center justify-center gap-2 border border-ups-yellow/10 text-base disabled:opacity-60 sticky bottom-0 z-10 shadow-2xl"
               >
-                {photoUploading ? <><Loader2 className="w-4 h-4 animate-spin"/> Uploading...</> : <><Check className="w-5 h-5" /> Save Update & Push to Tracking</>}
+                {photoUploading ? <><Loader2 className="w-5 h-5 animate-spin" /> Syncing data...</> : <><Check className="w-5 h-5" /> Save Changes</>}
               </button>
             </form>
           </div>

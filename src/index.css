@@ -2,14 +2,41 @@
 @import "leaflet/dist/leaflet.css";
 
 @theme {
-  --color-ups-brown: #351c15;
-  --color-ups-yellow: #ffc400;
-  --color-ups-yellow-dark: #e5b000;
+  --color-ups-brown: #4B2E06;
+  --color-ups-brown-dark: #351c15;
+  --color-ups-yellow: #F5C40A;
+  --color-ups-yellow-dark: #cc9f00;
+  
+  --shadow-italic: 0 30px 60px -12px rgba(75, 46, 6, 0.1), 0 18px 36px -18px rgba(75, 46, 6, 0.2);
 }
 
-.leaflet-container {
-  width: 100%;
-  height: 100%;
-  border-radius: 1.5rem;
-  z-index: 1;
+@layer base {
+  html, body {
+    @apply overflow-x-hidden scroll-smooth antialiased;
+    background: #fdfdfd;
+  }
+}
+
+@layer components {
+  .italic-shadow {
+    box-shadow: var(--shadow-italic);
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .leaflet-container {
+    @apply w-full h-full z-0;
+    filter: saturate(1.2) contrast(1.1);
+  }
+
+  /* Custom marker shadow for premium feel */
+  .leaflet-marker-icon {
+    filter: drop-shadow(0 10px 10px rgba(0,0,0,0.2));
+  }
 }
