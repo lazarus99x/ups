@@ -6,6 +6,7 @@ import {
   ChevronRight, Play
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { USAHomeMap } from '../components/USAHomeMap';
 
 export const Home: React.FC = () => {
   const [trackingId, setTrackingId] = useState('');
@@ -334,19 +335,9 @@ export const Home: React.FC = () => {
                 </div>
               </div>
             </div>
-            <div className="lg:w-1/2 w-full h-[300px] sm:h-[400px] rounded-3xl overflow-hidden relative border-4 border-gray-50">
-              <img 
-                src="https://images.unsplash.com/photo-1548345680-f5475ee511d7?auto=format&fit=crop&q=80&w=1200" 
-                alt="UPS USA Location" 
-                className="w-full h-full object-cover object-left"
-                referrerPolicy="no-referrer"
-              />
-              <div className="absolute inset-0 bg-ups-brown/10" />
-              <div className="absolute top-[35%] left-[22%] -translate-x-1/2 -translate-y-1/2">
-                <div className="w-16 h-16 bg-ups-brown text-ups-yellow rounded-full flex items-center justify-center shadow-2xl animate-bounce">
-                  <MapPin className="w-8 h-8" />
-                </div>
-              </div>
+            <div className="lg:w-1/2 w-full h-[300px] sm:h-[400px] rounded-3xl overflow-hidden relative border-4 border-gray-50 shadow-inner">
+              <USAHomeMap />
+              <div className="absolute inset-0 pointer-events-none bg-ups-brown/5" />
             </div>
           </div>
         </div>
