@@ -1,0 +1,92 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: users
+    // Fields:
+    //   - uid: string (required)
+    //   - email: string (required)
+    //   - role: string (required, ['admin', 'staff', 'customer'])
+    //   - displayName: string (optional)
+    //   - photoURL: string (optional)
+    //
+    // Collection: shipments
+    // Fields:
+    //   - trackingNumber: string (required)
+    //   - senderId: string (required)
+    //   - receiverName: string (required)
+    //   - receiverEmail: string (required)
+    //   - origin: string (required)
+    //   - destination: string (required)
+    //   - status: string (required, ['Active', 'On Hold', 'Delivered', 'Cancelled'])
+    //   - currentLocation: map (required, {lat, lng, address})
+    //   - history: list (required)
+    //   - estimatedDelivery: string (required)
+    //   - createdAt: string (required)
+    //   - updatedAt: string (required)
+    //
+    // ===============================================================
+
+    // Helper Functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+          (request.auth.token.email == "lazarus99x@gmail.com" && request.auth.token.email_verified == true));
+    }
+
+    function isStaff() {
+      return isAuthenticated() &&
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'staff' || isAdmin());
+    }
+
+    function isValidUser(data) {
+      return data.keys().hasAll(['uid', 'email', 'role']) &&
+             data.uid is string &&
+             data.email is string &&
+             data.role in ['admin', 'staff', 'customer'];
+    }
+
+    function isValidShipment(data) {
+      return data.keys().hasAll(['trackingNumber', 'senderId', 'origin', 'destination', 'status', 'currentLocation', 'history']) &&
+             data.trackingNumber is string &&
+             data.senderId is string &&
+             data.status in ['Active', 'On Hold', 'Delivered', 'Cancelled'] &&
+             data.currentLocation is map &&
+             data.history is list;
+    }
+
+    // Rules for users collection
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isStaff();
+      allow create: if isAuthenticated() && isValidUser(request.resource.data) && (isOwner(userId) || isAdmin());
+      allow update: if isAuthenticated() && isValidUser(request.resource.data) && (isOwner(userId) || isAdmin()) &&
+                    (request.resource.data.role == resource.data.role || isAdmin());
+    }
+
+    // Rules for shipments collection
+    match /shipments/{shipmentId} {
+      allow read: if isAuthenticated() && (isOwner(resource.data.senderId) || isStaff() || request.auth.token.email == resource.data.receiverEmail);
+      allow create: if isStaff() && isValidShipment(request.resource.data);
+      allow update: if isStaff() && isValidShipment(request.resource.data);
+      allow delete: if isAdmin();
+    }
+    
+    // Allow public tracking by tracking number (read-only)
+    // Note: In a real app, we might want to restrict this more, but for a demo tracking is often public
+    match /shipments/{shipmentId} {
+       allow get: if true; // Public tracking
+       allow list: if isStaff(); // Only staff can list all shipments
+    }
+  }
+}
