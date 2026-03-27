@@ -498,8 +498,8 @@ export const Admin: React.FC = () => {
 
       {/* ─────────── CREATE SHIPMENT MODAL ─────────── */}
       {showAddModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-[100] flex items-center justify-center sm:p-4 p-0 overflow-y-auto">
-          <div className="bg-white w-full max-w-3xl sm:rounded-[2.5rem] rounded-none shadow-2xl overflow-hidden min-h-screen sm:min-h-0 sm:my-8 mb-0 flex flex-col">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-[100] flex items-center justify-center sm:p-4 p-0">
+          <div className="bg-white w-full max-w-3xl sm:rounded-[2.5rem] rounded-none shadow-2xl overflow-hidden h-screen sm:h-auto sm:max-h-[90vh] flex flex-col">
             <div className="p-6 sm:p-8 bg-ups-brown text-ups-yellow flex justify-between items-center sticky top-0 z-10">
               <div>
                 <h2 className="text-xl sm:text-2xl font-bold leading-tight">New Shipment</h2>
@@ -686,8 +686,8 @@ export const Admin: React.FC = () => {
 
       {/* ─────────── UPDATE SHIPMENT MODAL ─────────── */}
       {editingShipment && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-[100] flex items-center justify-center sm:p-4 p-0 overflow-y-auto">
-          <div className="bg-white w-full max-w-lg sm:rounded-[2.5rem] rounded-none shadow-2xl overflow-hidden min-h-screen sm:min-h-0 sm:my-8 mb-0 flex flex-col">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-[100] flex items-center justify-center sm:p-4 p-0">
+          <div className="bg-white w-full max-w-lg sm:rounded-[2.5rem] rounded-none shadow-2xl overflow-hidden h-screen sm:h-auto sm:max-h-[90vh] flex flex-col">
             <div className="p-6 sm:p-8 bg-ups-brown text-ups-yellow flex justify-between items-center sticky top-0 z-10 shadow-lg">
               <div>
                 <h2 className="text-xl sm:text-2xl font-bold leading-tight">Update Shipment</h2>
