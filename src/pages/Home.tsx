@@ -213,6 +213,7 @@ export const Home: React.FC = () => {
               <motion.div
                 key={index}
                 whileHover={{ y: -10 }}
+                onClick={() => navigate('/tracking')}
                 className="bg-white rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden shadow-sm border border-gray-100 group cursor-pointer"
               >
                 <div className="h-40 sm:h-48 overflow-hidden relative">
@@ -289,7 +290,10 @@ export const Home: React.FC = () => {
                   </div>
                 </div>
               </div>
-              <button className="bg-ups-yellow text-ups-brown px-8 sm:px-10 py-4 sm:py-5 rounded-xl sm:rounded-2xl font-bold hover:bg-white transition-all w-full sm:w-fit">
+              <button 
+                onClick={() => navigate('/solutions')}
+                className="bg-ups-yellow text-ups-brown px-8 sm:px-10 py-4 sm:py-5 rounded-xl sm:rounded-2xl font-bold hover:bg-white transition-all w-full sm:w-fit"
+              >
                 Explore Solutions
               </button>
             </div>

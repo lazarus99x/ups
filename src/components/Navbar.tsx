@@ -20,10 +20,10 @@ export const Navbar: React.FC = () => {
   };
 
   const navLinks = [
-    { label: 'Shipping', path: '/', active: true },
-    { label: 'Tracking', path: '/tracking/new', active: true },
-    { label: 'Solutions', path: '#', active: false },
-    { label: 'Support', path: '#', active: false },
+    { label: 'Shipping', path: '/' },
+    { label: 'Tracking', path: '/tracking' },
+    { label: 'Solutions', path: '/solutions' },
+    { label: 'Support', path: '/support' },
   ];
 
   return (
@@ -58,11 +58,9 @@ export const Navbar: React.FC = () => {
 
               <div className="hidden lg:flex items-center gap-8">
                 {navLinks.map((link) => (
-                  link.active ? (
-                    <Link key={link.label} to={link.path} className="text-sm font-bold text-ups-brown hover:text-ups-yellow-dark transition-colors uppercase tracking-wider">{link.label}</Link>
-                  ) : (
-                    <span key={link.label} className="text-sm font-bold text-ups-brown/40 cursor-not-allowed uppercase tracking-wider">{link.label}</span>
-                  )
+                  <Link key={link.label} to={link.path} className="text-sm font-bold text-ups-brown hover:text-ups-yellow-dark transition-colors uppercase tracking-wider">
+                    {link.label}
+                  </Link>
                 ))}
               </div>
             </div>
@@ -112,24 +110,15 @@ export const Navbar: React.FC = () => {
             <div className="space-y-4">
               <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-2">Main Navigation</p>
               {navLinks.map((link) => (
-                link.active ? (
-                  <Link
-                    key={link.label}
-                    to={link.path}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl text-ups-brown font-black uppercase tracking-widest text-sm hover:bg-ups-yellow/10 transition-colors"
-                  >
-                    {link.label}
-                    <Package className="w-4 h-4 opacity-40" />
-                  </Link>
-                ) : (
-                  <div
-                    key={link.label}
-                    className="p-4 bg-gray-50/50 rounded-2xl text-ups-brown/30 font-black uppercase tracking-widest text-sm cursor-not-allowed"
-                  >
-                    {link.label}
-                  </div>
-                )
+                <Link
+                  key={link.label}
+                  to={link.path}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl text-ups-brown font-black uppercase tracking-widest text-sm hover:bg-ups-yellow/10 transition-colors"
+                >
+                  {link.label}
+                  <Package className="w-4 h-4 opacity-40" />
+                </Link>
               ))}
             </div>
 

@@ -8,6 +8,9 @@ import { Login } from './pages/Login';
 
 import { Admin } from './pages/Admin';
 import { ShipmentDetail } from './pages/ShipmentDetail';
+import { Solutions } from './pages/Solutions';
+import { Support } from './pages/Support';
+import { Tracking } from './pages/Tracking';
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, loading } = useAuth();
@@ -38,7 +41,10 @@ export default function App() {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/login" element={<Login />} />
+                <Route path="/tracking" element={<Tracking />} />
                 <Route path="/tracking/:id" element={<ShipmentDetail />} />
+                <Route path="/solutions" element={<Solutions />} />
+                <Route path="/support" element={<Support />} />
 
                 <Route 
                   path="/admin" 
