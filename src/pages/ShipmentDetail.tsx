@@ -91,7 +91,7 @@ export const ShipmentDetail: React.FC = () => {
           <div style="text-align:right">
             <div style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Tracking Number</div>
             <div style="font-size:20px;font-weight:900;color:#4B2E06">${shipment.trackingNumber}</div>
-            <div style="margin-top:8px;display:inline-block;padding:4px 12px;border-radius:20px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;background:${shipment.status === 'Delivered' ? '#d1fae5' : shipment.status === 'Active' ? '#dbeafe' : shipment.status === 'On Hold' ? '#fef3c7' : '#fee2e2'};color:${shipment.status === 'Delivered' ? '#065f46' : shipment.status === 'Active' ? '#1e40af' : shipment.status === 'On Hold' ? '#92400e' : '#991b1b'}">${shipment.status}</div>
+            <div style="margin-top:8px;display:inline-block;padding:4px 12px;border-radius:20px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;background:${shipment.status === 'Delivered' ? '#d1fae5' : shipment.status === 'Out for Delivery' ? '#e0e7ff' : shipment.status === 'Active' ? '#dbeafe' : shipment.status === 'On Hold' ? '#fef3c7' : '#fee2e2'};color:${shipment.status === 'Delivered' ? '#065f46' : shipment.status === 'Out for Delivery' ? '#3730a3' : shipment.status === 'Active' ? '#1e40af' : shipment.status === 'On Hold' ? '#92400e' : '#991b1b'}">${shipment.status}</div>
             <div style="font-size:10px;color:#aaa;margin-top:8px">Generated: ${format(new Date(), 'MMM dd, yyyy HH:mm')}</div>
           </div>
         </div>
@@ -253,12 +253,13 @@ export const ShipmentDetail: React.FC = () => {
   const statusConfig = {
     Active:    { dot: 'bg-blue-500',    badge: 'bg-blue-50 text-blue-700',     label: 'In Transit' },
     'On Hold': { dot: 'bg-amber-500',   badge: 'bg-amber-50 text-amber-700',   label: 'On Hold' },
+    'Out for Delivery': { dot: 'bg-indigo-500', badge: 'bg-indigo-50 text-indigo-700', label: 'Out for Delivery' },
     Delivered: { dot: 'bg-emerald-500', badge: 'bg-emerald-50 text-emerald-700', label: 'Delivered' },
     Cancelled: { dot: 'bg-red-500',     badge: 'bg-red-50 text-red-700',       label: 'Cancelled' },
   }[shipment.status] ?? { dot: 'bg-gray-400', badge: 'bg-gray-100 text-gray-600', label: shipment.status };
 
   const steps = ['Order Placed', 'Picked Up', 'In Transit', 'Out for Delivery', 'Delivered'];
-  const stepIndex = { Active: 2, 'On Hold': 1, Delivered: 4, Cancelled: 0 }[shipment.status] ?? 0;
+  const stepIndex = { Active: 2, 'On Hold': 1, 'Out for Delivery': 3, Delivered: 4, Cancelled: 0 }[shipment.status] ?? 0;
 
   const meta = shipment.metadata;
 

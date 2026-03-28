@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../components/AuthProvider';
 import { usePhotoUpload } from '../lib/usePhotoUpload';
-import { Shipment, ShipmentStatus } from '../types';
+import { Shipment, ShipmentStatus, HistoryItem } from '../types';
 import {
   Plus, MapPin, Truck, Box, User, Mail, Phone,
   Play, Pause, X, Check, Package, Edit2, Trash2,
@@ -28,7 +28,7 @@ const geocodeAddress = async (address: string): Promise<{ lat: number; lng: numb
   return { lat: 20.0, lng: 0.0 };
 };
 
-const SHIPMENT_STATUSES: ShipmentStatus[] = ['Active', 'On Hold', 'Delivered', 'Cancelled'];
+const SHIPMENT_STATUSES: ShipmentStatus[] = ['Active', 'On Hold', 'Out for Delivery', 'Delivered', 'Cancelled'];
 
 const emptyForm = () => ({
   trackingNumber: `UPS-${Math.floor(100000 + Math.random() * 900000)}`,
@@ -99,6 +99,7 @@ export const Admin: React.FC = () => {
     historyStatus: '',
     historyDescription: '',
   });
+  const [updateHistory, setUpdateHistory] = useState<HistoryItem[]>([]);
 
   const [createCharges, setCreateCharges] = useState<{ label: string; amount: string }[]>([]);
   const [updateCharges, setUpdateCharges] = useState<{ label: string; amount: string }[]>([]);
@@ -236,12 +237,14 @@ export const Admin: React.FC = () => {
       ? await geocodeAddress(updateForm.currentLocationAddress)
       : { lat: editingShipment.currentLocation.lat, lng: editingShipment.currentLocation.lng };
 
-    const newHistoryEntry = {
-      timestamp: new Date().toISOString(),
-      status: updateForm.historyStatus || updateForm.status,
-      location: updateForm.currentLocationAddress || editingShipment.currentLocation.address,
-      description: updateForm.historyDescription || `Status updated to ${updateForm.status}.`,
-    };
+    const historyToAdd = (updateForm.historyStatus || updateForm.historyDescription)
+      ? [{
+          timestamp: new Date().toISOString(),
+          status: updateForm.historyStatus || updateForm.status,
+          location: updateForm.currentLocationAddress || editingShipment.currentLocation.address,
+          description: updateForm.historyDescription || `Status updated to ${updateForm.status}.`,
+        }]
+      : [];
 
     try {
       const newPhotoUrls = updatePhotoFiles.length > 0 ? await uploadPhotos(updatePhotoFiles) : [];
@@ -256,7 +259,7 @@ export const Admin: React.FC = () => {
             lng: newCoords.lng,
             address: locationText,
           },
-          history: [newHistoryEntry, ...editingShipment.history],
+          history: [...historyToAdd, ...updateHistory],
           updated_at: new Date().toISOString(),
           metadata: {
             ...(editingShipment.metadata || {}),
@@ -302,6 +305,7 @@ export const Admin: React.FC = () => {
 
   const openUpdateModal = (shipment: Shipment) => {
     setEditingShipment(shipment);
+    setUpdateHistory([...shipment.history]);
     setUpdateForm({
       status: shipment.status,
       currentLocationAddress: shipment.currentLocation.address,
@@ -387,6 +391,7 @@ export const Admin: React.FC = () => {
                       <span className={cn(
                         "px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest",
                         s.status === 'Active' ? 'bg-blue-50 text-blue-700' :
+                        s.status === 'Out for Delivery' ? 'bg-indigo-50 text-indigo-700' :
                         s.status === 'Delivered' ? 'bg-emerald-50 text-emerald-700' :
                         s.status === 'On Hold' ? 'bg-amber-50 text-amber-700' :
                         'bg-red-50 text-red-700'
@@ -447,6 +452,7 @@ export const Admin: React.FC = () => {
                   <span className={cn(
                     "px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-widest",
                     s.status === 'Active' ? 'bg-blue-50 text-blue-700' :
+                    s.status === 'Out for Delivery' ? 'bg-indigo-50 text-indigo-700' :
                     s.status === 'Delivered' ? 'bg-emerald-50 text-emerald-700' :
                     s.status === 'On Hold' ? 'bg-amber-50 text-amber-700' :
                     'bg-red-50 text-red-700'
@@ -740,15 +746,77 @@ export const Admin: React.FC = () => {
                 />
               </div>
 
-              {/* History Preview */}
+              {/* History Editor */}
               <div className="bg-gray-50 rounded-2xl p-4 border border-gray-100">
-                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">History ({editingShipment.history.length} events)</p>
-                <div className="space-y-2 max-h-40 overflow-y-auto">
-                  {editingShipment.history.slice(0, 4).map((h, i) => (
-                    <div key={i} className="flex gap-3 text-xs">
-                      <span className="text-gray-400 whitespace-nowrap">{format(new Date(h.timestamp), 'MMM dd, HH:mm')}</span>
-                      <span className="font-semibold text-gray-700">{h.status}</span>
-                      <span className="text-gray-500 truncate">{h.location}</span>
+                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Edit Past Events ({updateHistory.length})</p>
+                <div className="space-y-3 max-h-80 overflow-y-auto pr-1">
+                  {updateHistory.map((h, i) => (
+                    <div key={i} className="bg-white p-3 rounded-xl border border-gray-200 relative group animate-in fade-in">
+                      <button
+                        type="button"
+                        onClick={() => setUpdateHistory(prev => prev.filter((_, idx) => idx !== i))}
+                        className="absolute right-2 top-2 p-1.5 bg-red-50 text-red-500 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                        title="Delete Event"
+                      >
+                        <Trash className="w-3.5 h-3.5" />
+                      </button>
+                      <div className="grid grid-cols-2 gap-2 mb-2 pr-8">
+                        <div>
+                          <label className="block text-[10px] uppercase font-bold text-gray-400 mb-0.5">Date & Time</label>
+                          <input
+                            type="datetime-local"
+                            className="w-full text-xs p-1.5 bg-gray-50 border border-gray-100 rounded-md outline-none focus:border-ups-brown"
+                            value={new Date(new Date(h.timestamp).getTime() - new Date(h.timestamp).getTimezoneOffset() * 60000).toISOString().slice(0, 16)}
+                            onChange={e => {
+                              try {
+                                const d = new Date(e.target.value);
+                                if (!isNaN(d.getTime())) {
+                                  const newHist = [...updateHistory];
+                                  newHist[i].timestamp = d.toISOString();
+                                  setUpdateHistory(newHist);
+                                }
+                              } catch(err) {}
+                            }}
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[10px] uppercase font-bold text-gray-400 mb-0.5">Status Label</label>
+                          <input
+                            className="w-full text-xs p-1.5 bg-gray-50 border border-gray-100 rounded-md outline-none focus:border-ups-brown"
+                            value={h.status}
+                            onChange={e => {
+                              const newHist = [...updateHistory];
+                              newHist[i].status = e.target.value;
+                              setUpdateHistory(newHist);
+                            }}
+                          />
+                        </div>
+                      </div>
+                      <div className="mb-2">
+                        <label className="block text-[10px] uppercase font-bold text-gray-400 mb-0.5">Location</label>
+                        <input
+                          className="w-full text-xs p-1.5 bg-gray-50 border border-gray-100 rounded-md outline-none focus:border-ups-brown"
+                          value={h.location}
+                          onChange={e => {
+                            const newHist = [...updateHistory];
+                            newHist[i].location = e.target.value;
+                            setUpdateHistory(newHist);
+                          }}
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] uppercase font-bold text-gray-400 mb-0.5">Description</label>
+                        <textarea
+                          rows={2}
+                          className="w-full text-xs p-1.5 bg-gray-50 border border-gray-100 rounded-md outline-none focus:border-ups-brown"
+                          value={h.description}
+                          onChange={e => {
+                            const newHist = [...updateHistory];
+                            newHist[i].description = e.target.value;
+                            setUpdateHistory(newHist);
+                          }}
+                        />
+                      </div>
                     </div>
                   ))}
                 </div>

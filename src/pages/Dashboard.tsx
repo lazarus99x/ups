@@ -148,6 +148,7 @@ export const Dashboard: React.FC = () => {
                         <span className={cn(
                           "px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest",
                           shipment.status === 'Active' ? 'bg-blue-50 text-blue-700' :
+                          shipment.status === 'Out for Delivery' ? 'bg-indigo-50 text-indigo-700' :
                           shipment.status === 'Delivered' ? 'bg-emerald-50 text-emerald-700' :
                           shipment.status === 'On Hold' ? 'bg-amber-50 text-amber-700' :
                           'bg-red-50 text-red-700'

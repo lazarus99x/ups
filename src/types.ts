@@ -8,7 +8,7 @@ export interface UserProfile {
   photoURL?: string;
 }
 
-export type ShipmentStatus = 'Active' | 'On Hold' | 'Delivered' | 'Cancelled';
+export type ShipmentStatus = 'Active' | 'On Hold' | 'Out for Delivery' | 'Delivered' | 'Cancelled';
 
 export interface Location {
   lat: number;
