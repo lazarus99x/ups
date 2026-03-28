@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS public.shipments (
   receiver_email TEXT NOT NULL,
   origin TEXT NOT NULL,
   destination TEXT NOT NULL,
-  status TEXT NOT NULL CHECK(status IN ('Active', 'On Hold', 'Delivered', 'Cancelled')),
+  status TEXT NOT NULL CHECK(status IN ('Active', 'On Hold', 'Out for Delivery', 'Delivered', 'Cancelled')),
   current_location JSONB NOT NULL,
   history JSONB NOT NULL DEFAULT '[]',
   estimated_delivery TIMESTAMP WITH TIME ZONE,

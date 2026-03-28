@@ -13,19 +13,19 @@ import { cn } from '../lib/utils';
 import upsLogo from '../upslogo.png';
 
 // Geocode any address/city string to real lat/lng using OpenStreetMap Nominatim (free, no key)
-const geocodeAddress = async (address: string): Promise<{ lat: number; lng: number }> => {
-  if (!address.trim()) return { lat: 20.0, lng: 0.0 };
+const geocodeAddress = async (address: string): Promise<{ lat: number; lng: number } | null> => {
+  if (!address.trim()) return null;
   try {
-    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&limit=1`;
+    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&limit=1&email=admin@ups-clone.com`;
     const res = await fetch(url, { headers: { 'Accept-Language': 'en' } });
     const data = await res.json();
     if (data && data.length > 0) {
       return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
     }
   } catch (err) {
-    console.warn('Geocoding failed, using default coords:', err);
+    console.warn('Geocoding failed:', err);
   }
-  return { lat: 20.0, lng: 0.0 };
+  return null;
 };
 
 const SHIPMENT_STATUSES: ShipmentStatus[] = ['Active', 'On Hold', 'Out for Delivery', 'Delivered', 'Cancelled'];
@@ -164,7 +164,9 @@ export const Admin: React.FC = () => {
     if (!user) return;
 
     const originAddress = newShipment.origin || `${newShipment.senderCity}, ${newShipment.senderCountry}`;
-    const originCoords = await geocodeAddress(originAddress);
+    const geocoded = await geocodeAddress(originAddress);
+    // Fallback to center of US if geocoding fails instead of Mali
+    const originCoords = geocoded || { lat: 39.8283, lng: -98.5795 };
     const deliveryDate = new Date(Date.now() + parseInt(newShipment.estimatedDeliveryDays) * 24 * 60 * 60 * 1000);
 
     try {
@@ -223,8 +225,9 @@ export const Admin: React.FC = () => {
       setCreatePhotoFiles([]);
       setCreatePhotoPreviews([]);
       setCreateCharges([]);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error creating shipment:', err);
+      alert('Error creating shipment: ' + (err.message || 'Check connection or constraints.'));
     }
   };
 
@@ -233,9 +236,12 @@ export const Admin: React.FC = () => {
     if (!editingShipment) return;
 
     const locationText = updateForm.currentLocationAddress || editingShipment.currentLocation.address;
-    const newCoords = updateForm.currentLocationAddress
-      ? await geocodeAddress(updateForm.currentLocationAddress)
-      : { lat: editingShipment.currentLocation.lat, lng: editingShipment.currentLocation.lng };
+    
+    let newCoords = { lat: editingShipment.currentLocation.lat, lng: editingShipment.currentLocation.lng };
+    if (updateForm.currentLocationAddress) {
+      const g = await geocodeAddress(updateForm.currentLocationAddress);
+      if (g) newCoords = g;
+    }
 
     const historyToAdd = (updateForm.historyStatus || updateForm.historyDescription)
       ? [{
@@ -277,8 +283,9 @@ export const Admin: React.FC = () => {
       setUpdatePhotoFiles([]);
       setUpdatePhotoPreviews([]);
       setUpdateCharges([]);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error updating shipment:', err);
+      alert('Failed to save update:\n' + (err.message || 'Unknown error occurred.'));
     }
   };
 
