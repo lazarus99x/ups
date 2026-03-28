@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, ArrowRight, Package, Shield, Globe, Clock, HelpCircle } from 'lucide-react';
 import { motion } from 'motion/react';
+import upsLogo from '../upslogo.png';
 
 export const Tracking: React.FC = () => {
   const [trackingId, setTrackingId] = useState('');
@@ -106,8 +107,8 @@ export const Tracking: React.FC = () => {
 
               <div className="p-8 bg-ups-brown rounded-[2.5rem] text-white space-y-6">
                 <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 bg-ups-yellow rounded-xl flex items-center justify-center">
-                    <Package className="w-5 h-5 text-ups-brown" />
+                  <div className="w-10 h-10 bg-ups-yellow rounded-xl flex items-center justify-center p-1.5">
+                    <img src={upsLogo} alt="UPS Logo" className="w-full h-full object-contain" />
                   </div>
                   <div>
                     <h4 className="font-bold">Shipment Protection</h4>

@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '../lib/utils';
+import upsLogo from '../upslogo.png';
 
 // Geocode any address/city string to real lat/lng using OpenStreetMap Nominatim (free, no key)
 const geocodeAddress = async (address: string): Promise<{ lat: number; lng: number }> => {
@@ -355,15 +356,15 @@ export const Admin: React.FC = () => {
                   <tr><td colSpan={6} className="px-6 py-12 text-center text-gray-400">Loading shipments...</td></tr>
                 ) : shipments.length === 0 ? (
                   <tr><td colSpan={6} className="px-6 py-16 text-center">
-                    <Package className="w-12 h-12 text-gray-200 mx-auto mb-3" />
+                    <img src={upsLogo} alt="UPS Logo" className="w-16 h-16 mx-auto mb-3 object-contain opacity-20 grayscale" />
                     <p className="text-gray-400 font-medium">No shipments yet.</p>
                   </td></tr>
                 ) : shipments.map((s) => (
                   <tr key={s.id} className="hover:bg-gray-50/50 transition-colors group">
                     <td className="px-6 py-5">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center group-hover:bg-ups-brown group-hover:text-ups-yellow transition-colors">
-                          <Package className="w-5 h-5" />
+                        <div className="w-10 h-10 bg-gray-50 border border-gray-100 rounded-xl flex items-center justify-center p-1.5 transition-colors">
+                          <img src={upsLogo} alt="UPS Shield" className="w-full h-full object-contain" />
                         </div>
                         <div>
                           <p className="font-bold text-ups-brown text-sm">{s.trackingNumber}</p>
