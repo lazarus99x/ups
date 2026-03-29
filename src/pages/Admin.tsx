@@ -12,6 +12,22 @@ import { format } from 'date-fns';
 import { cn } from '../lib/utils';
 import upsLogo from '../upslogo.png';
 
+import upsLogo from '../upslogo.png';
+
+const commonCountryCoords: Record<string, { lat: number, lng: number }> = {
+  'united states': { lat: 37.0902, lng: -95.7129 },
+  'usa': { lat: 37.0902, lng: -95.7129 },
+  'united kingdom': { lat: 55.3781, lng: -3.4360 },
+  'uk': { lat: 55.3781, lng: -3.4360 },
+  'canada': { lat: 56.1304, lng: -106.3468 },
+  'australia': { lat: -25.2744, lng: 133.7751 },
+  'germany': { lat: 51.1657, lng: 10.4515 },
+  'france': { lat: 46.2276, lng: 2.2137 },
+  'china': { lat: 35.8617, lng: 104.1954 },
+  'uae': { lat: 23.4241, lng: 53.8478 },
+  'united arab emirates': { lat: 23.4241, lng: 53.8478 },
+};
+
 // Geocode any address/city string to real lat/lng using OpenStreetMap Nominatim (free, no key)
 const geocodeAddress = async (address: string): Promise<{ lat: number; lng: number } | null> => {
   if (!address || !address.trim() || address.trim().length < 2) return null;
@@ -31,6 +47,13 @@ const geocodeAddress = async (address: string): Promise<{ lat: number; lng: numb
   } catch (err) {
     console.warn('Geocoding failed:', err);
   }
+
+  // Fallback to pre-defined centers if Nominatim fails
+  const lowerAddr = address.toLowerCase();
+  for (const [country, coords] of Object.entries(commonCountryCoords)) {
+    if (lowerAddr.includes(country)) return coords;
+  }
+
   return null;
 };
 
