@@ -278,10 +278,13 @@ export const Admin: React.FC = () => {
     
     let newCoords = { lat: editingShipment.currentLocation.lat, lng: editingShipment.currentLocation.lng };
     
-    // Explicit Overwrite: If address has changed, we MUST find new coordinates or use the manual ones
+    // Explicit Overwrite: Priority to manual or validated preview coordinates
     if (manualCoords && previewCoords) {
       newCoords = previewCoords;
-    } else if (updateForm.currentLocationAddress && updateForm.currentLocationAddress !== editingShipment.currentLocation.address) {
+    } else if (previewCoords && geocodingStatus === 'success') {
+      newCoords = previewCoords;
+    } else if (updateForm.currentLocationAddress && (updateForm.currentLocationAddress !== editingShipment.currentLocation.address || (editingShipment.currentLocation.lat === 20 && editingShipment.currentLocation.lng === 0))) {
+      // Force geocoding if address changed OR if it's currently at the Mali default (20,0)
       const g = await geocodeAddress(updateForm.currentLocationAddress);
       if (g) {
         newCoords = g;
@@ -788,6 +791,14 @@ export const Admin: React.FC = () => {
               </div>
               <div>
                 <label className={labelCls}>Current Location (City, Country)</label>
+                
+                {editingShipment && editingShipment.currentLocation.lat === 20 && editingShipment.currentLocation.lng === 0 && (
+                  <div className="bg-red-50 border border-red-100 p-2.5 rounded-xl mb-3 flex items-center gap-2 animate-pulse">
+                    <AlertCircle className="w-4 h-4 text-red-500" />
+                    <p className="text-[10px] font-bold text-red-600 uppercase flex-1">Stuck at default coordinates (Mali). Search and Save to fix.</p>
+                  </div>
+                )}
+
                 <div className="flex gap-2">
                   <input
                     className={cn(inputCls, "flex-1")}
@@ -819,7 +830,7 @@ export const Admin: React.FC = () => {
                     )}
                   >
                     {geocodingStatus === 'searching' ? <Loader2 className="w-4 h-4 animate-spin" /> : <MapPin className="w-4 h-4" />}
-                    {geocodingStatus === 'success' ? 'Found' : geocodingStatus === 'failed' ? 'Not Found' : 'Search'}
+                    {geocodingStatus === 'success' ? 'Found' : geocodingStatus === 'failed' ? 'Not Found' : 'Search & Sync'}
                   </button>
                 </div>
                 
