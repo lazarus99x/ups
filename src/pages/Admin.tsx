@@ -52,6 +52,15 @@ const geocodeAddress = async (address: string): Promise<{ lat: number; lng: numb
     if (lowerAddr.includes(country)) return coords;
   }
 
+  // Final attempt: search for just the country if the address contains a comma
+  if (address.includes(',')) {
+    const parts = address.split(',');
+    const countryPart = parts[parts.length - 1].trim();
+    if (countryPart.length >= 2) {
+      return await geocodeAddress(countryPart); // Recursive call for just the country
+    }
+  }
+
   return null;
 };
 
@@ -269,6 +278,7 @@ export const Admin: React.FC = () => {
     
     let newCoords = { lat: editingShipment.currentLocation.lat, lng: editingShipment.currentLocation.lng };
     
+    // Explicit Overwrite: If address has changed, we MUST find new coordinates or use the manual ones
     if (manualCoords && previewCoords) {
       newCoords = previewCoords;
     } else if (updateForm.currentLocationAddress && updateForm.currentLocationAddress !== editingShipment.currentLocation.address) {
@@ -276,9 +286,21 @@ export const Admin: React.FC = () => {
       if (g) {
         newCoords = g;
       } else {
-        const proceed = window.confirm(`Could not find coordinates for "${updateForm.currentLocationAddress}". Keep existing map location?`);
-        if (!proceed) return;
+        const proceed = window.confirm(`System could not locate "${updateForm.currentLocationAddress}" on the map. \n\nClick OK to use default US coordinates (37.09, -95.71) instead of keeping the old location, or Cancel to stop.`);
+        if (proceed) {
+          // Force fallback to US or first country found in list
+          const lowerAddr = updateForm.currentLocationAddress.toLowerCase();
+          const countryMatch = Object.entries(commonCountryCoords).find(([c]) => lowerAddr.includes(c));
+          newCoords = countryMatch ? countryMatch[1] : commonCountryCoords['united states'];
+        } else {
+          return;
+        }
       }
+    }
+
+    // Stop simulation for this shipment if it was running, as we're setting a new manual point
+    if (simulatingId === editingShipment.id) {
+      setSimulatingId(null);
     }
 
     const historyToAdd = (updateForm.historyStatus || updateForm.historyDescription)
