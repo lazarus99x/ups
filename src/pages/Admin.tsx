@@ -12,8 +12,6 @@ import { format } from 'date-fns';
 import { cn } from '../lib/utils';
 import upsLogo from '../upslogo.png';
 
-import upsLogo from '../upslogo.png';
-
 const commonCountryCoords: Record<string, { lat: number, lng: number }> = {
   'united states': { lat: 37.0902, lng: -95.7129 },
   'usa': { lat: 37.0902, lng: -95.7129 },
