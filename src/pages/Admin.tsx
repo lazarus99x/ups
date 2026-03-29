@@ -14,10 +14,16 @@ import upsLogo from '../upslogo.png';
 
 // Geocode any address/city string to real lat/lng using OpenStreetMap Nominatim (free, no key)
 const geocodeAddress = async (address: string): Promise<{ lat: number; lng: number } | null> => {
-  if (!address.trim()) return null;
+  if (!address || !address.trim() || address.trim().length < 2) return null;
   try {
     const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&limit=1&email=admin@ups-clone.com`;
-    const res = await fetch(url, { headers: { 'Accept-Language': 'en' } });
+    // Explicit User-Agent required by Nominatim usage policy
+    const res = await fetch(url, { 
+      headers: { 
+        'Accept-Language': 'en',
+        'User-Agent': 'UPS-Clone/1.0 (admin@ups-clone.com)'
+      } 
+    });
     const data = await res.json();
     if (data && data.length > 0) {
       return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
@@ -100,6 +106,9 @@ export const Admin: React.FC = () => {
     historyDescription: '',
   });
   const [updateHistory, setUpdateHistory] = useState<HistoryItem[]>([]);
+  const [geocodingStatus, setGeocodingStatus] = useState<'idle' | 'searching' | 'success' | 'failed'>('idle');
+  const [manualCoords, setManualCoords] = useState(false);
+  const [previewCoords, setPreviewCoords] = useState<{ lat: number; lng: number } | null>(null);
 
   const [createCharges, setCreateCharges] = useState<{ label: string; amount: string }[]>([]);
   const [updateCharges, setUpdateCharges] = useState<{ label: string; amount: string }[]>([]);
@@ -238,9 +247,17 @@ export const Admin: React.FC = () => {
     const locationText = updateForm.currentLocationAddress || editingShipment.currentLocation.address;
     
     let newCoords = { lat: editingShipment.currentLocation.lat, lng: editingShipment.currentLocation.lng };
-    if (updateForm.currentLocationAddress) {
+    
+    if (manualCoords && previewCoords) {
+      newCoords = previewCoords;
+    } else if (updateForm.currentLocationAddress && updateForm.currentLocationAddress !== editingShipment.currentLocation.address) {
       const g = await geocodeAddress(updateForm.currentLocationAddress);
-      if (g) newCoords = g;
+      if (g) {
+        newCoords = g;
+      } else {
+        const proceed = window.confirm(`Could not find coordinates for "${updateForm.currentLocationAddress}". Keep existing map location?`);
+        if (!proceed) return;
+      }
     }
 
     const historyToAdd = (updateForm.historyStatus || updateForm.historyDescription)
@@ -313,6 +330,9 @@ export const Admin: React.FC = () => {
   const openUpdateModal = (shipment: Shipment) => {
     setEditingShipment(shipment);
     setUpdateHistory([...shipment.history]);
+    setGeocodingStatus('idle');
+    setManualCoords(false);
+    setPreviewCoords(null);
     setUpdateForm({
       status: shipment.status,
       currentLocationAddress: shipment.currentLocation.address,
@@ -725,13 +745,82 @@ export const Admin: React.FC = () => {
               </div>
               <div>
                 <label className={labelCls}>Current Location (City, Country)</label>
-                <input
-                  className={inputCls}
-                  placeholder="e.g. London, UK  or  Paris, FR"
-                  value={updateForm.currentLocationAddress}
-                  onChange={e => setUpdateForm({...updateForm, currentLocationAddress: e.target.value})}
-                />
-                <p className="text-xs text-gray-400 mt-1">This updates the live map marker. Use a recognized city name for accuracy.</p>
+                <div className="flex gap-2">
+                  <input
+                    className={cn(inputCls, "flex-1")}
+                    placeholder="e.g. London, UK  or  Paris, FR"
+                    value={updateForm.currentLocationAddress}
+                    onChange={e => {
+                      setUpdateForm({...updateForm, currentLocationAddress: e.target.value});
+                      setGeocodingStatus('idle');
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      if (!updateForm.currentLocationAddress) return;
+                      setGeocodingStatus('searching');
+                      const g = await geocodeAddress(updateForm.currentLocationAddress);
+                      if (g) {
+                        setPreviewCoords(g);
+                        setGeocodingStatus('success');
+                      } else {
+                        setGeocodingStatus('failed');
+                      }
+                    }}
+                    className={cn(
+                      "px-4 rounded-xl font-bold text-xs transition-all flex items-center gap-2",
+                      geocodingStatus === 'success' ? "bg-emerald-50 text-emerald-600 border border-emerald-100" :
+                      geocodingStatus === 'failed' ? "bg-red-50 text-red-600 border border-red-100" :
+                      "bg-ups-brown text-ups-yellow"
+                    )}
+                  >
+                    {geocodingStatus === 'searching' ? <Loader2 className="w-4 h-4 animate-spin" /> : <MapPin className="w-4 h-4" />}
+                    {geocodingStatus === 'success' ? 'Found' : geocodingStatus === 'failed' ? 'Not Found' : 'Search'}
+                  </button>
+                </div>
+                
+                {geocodingStatus === 'success' && previewCoords && (
+                  <p className="text-[10px] text-emerald-600 mt-1 font-bold">
+                    Coordinates found: {previewCoords.lat.toFixed(4)}, {previewCoords.lng.toFixed(4)}
+                  </p>
+                )}
+
+                <div className="mt-3">
+                  <button 
+                    type="button"
+                    onClick={() => {
+                      setManualCoords(!manualCoords);
+                      if (!previewCoords && editingShipment) {
+                        setPreviewCoords({ lat: editingShipment.currentLocation.lat, lng: editingShipment.currentLocation.lng });
+                      }
+                    }}
+                    className="text-[10px] font-bold text-gray-400 uppercase tracking-widest hover:text-ups-brown transition-colors flex items-center gap-1.5"
+                  >
+                    <Edit2 className="w-3 h-3" /> {manualCoords ? "Use Auto-Geocoding" : "Set Coordinates Manually"}
+                  </button>
+                  
+                  {manualCoords && (
+                    <div className="grid grid-cols-2 gap-3 mt-2 animate-in fade-in slide-in-from-top-1">
+                      <div>
+                        <label className="block text-[10px] uppercase font-bold text-gray-400 mb-1">Latitude</label>
+                        <input 
+                          type="number" step="any" className={inputCls} 
+                          value={previewCoords?.lat || ''} 
+                          onChange={e => setPreviewCoords(prev => ({ ...prev!, lat: parseFloat(e.target.value) }))}
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] uppercase font-bold text-gray-400 mb-1">Longitude</label>
+                        <input 
+                          type="number" step="any" className={inputCls} 
+                          value={previewCoords?.lng || ''} 
+                          onChange={e => setPreviewCoords(prev => ({ ...prev!, lng: parseFloat(e.target.value) }))}
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
               <div>
                 <label className={labelCls}>History Event Label</label>
