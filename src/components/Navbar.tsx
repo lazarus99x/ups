@@ -23,6 +23,7 @@ export const Navbar: React.FC = () => {
   const navLinks = [
     { label: 'Shipping', path: '/' },
     { label: 'Tracking', path: '/tracking' },
+    { label: 'World Map', path: '/worldmap' },
     { label: 'Solutions', path: '/solutions' },
     { label: 'Support', path: '/support' },
   ];
@@ -141,6 +142,5 @@ export const Navbar: React.FC = () => {
     </>
   );
 };
-
 
 

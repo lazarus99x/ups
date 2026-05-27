@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { Shipment } from '../types';
-import { Map } from '../components/Map';
 import {
   Package, MapPin, Clock, AlertCircle, ArrowLeft, Share2, Printer,
   Truck, Box, Building, User, Mail, Phone, CheckCircle2,
@@ -336,28 +335,8 @@ export const ShipmentDetail: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 items-start">
 
 
-          {/* LEFT — Map + Stats + History */}
+          {/* LEFT — Stats + History */}
           <div className="lg:col-span-2 space-y-8">
-
-            {/* Map */}
-            <div className="bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden h-[450px] relative">
-              <Map currentLocation={shipment.currentLocation} history={shipment.history} />
-              <div className="absolute bottom-5 left-5 right-5 bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-xl border border-gray-100 z-[1000]">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-ups-brown rounded-xl flex items-center justify-center">
-                    <MapPin className="text-ups-yellow w-5 h-5" />
-                  </div>
-                  <div>
-                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Live Position</p>
-                    <p className="font-bold text-ups-brown text-sm">{shipment.currentLocation.address}</p>
-                  </div>
-                  <div className="ml-auto flex items-center gap-2">
-                    <span className={cn('w-2 h-2 rounded-full animate-pulse', statusConfig.dot)} />
-                    <span className="text-xs text-gray-500 font-medium">Live</span>
-                  </div>
-                </div>
-              </div>
-            </div>
 
             {/* Stats Row */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
