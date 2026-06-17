@@ -16,6 +16,7 @@ import {
   Globe2,
   ChevronRight,
   Play,
+  Ship,
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { USAHomeMap } from "../components/USAHomeMap";
@@ -150,7 +151,7 @@ export const Home: React.FC = () => {
               <div className="relative rounded-[3rem] overflow-hidden shadow-2xl border-8 border-white">
                 <img
                   src="https://images.unsplash.com/photo-1566576721346-d4a3b4eaeb55?auto=format&fit=crop&q=80&w=1200"
-                  alt="UPS Logistics"
+                  alt="ATH Logistics"
                   className="w-full h-[600px] object-cover"
                   referrerPolicy="no-referrer"
                 />
@@ -186,6 +187,70 @@ export const Home: React.FC = () => {
               {/* Floating elements */}
               <div className="absolute -top-10 -right-10 w-40 h-40 bg-ups-yellow rounded-full blur-3xl opacity-30 -z-10" />
               <div className="absolute -bottom-10 -left-10 w-60 h-60 bg-ups-brown rounded-full blur-3xl opacity-10 -z-10" />
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Air Freight Section */}
+      <section className="py-24 bg-white relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-ups-yellow rounded-full blur-[150px] opacity-10" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              className="relative"
+            >
+              <div className="relative rounded-[3rem] overflow-hidden shadow-2xl border-8 border-gray-100">
+                <img
+                  src="https://images.unsplash.com/photo-1596647616796-3826b76af2fc?auto=format&fit=crop&q=80&w=1200"
+                  alt="Air Freight"
+                  className="w-full h-[500px] object-cover"
+                  referrerPolicy="no-referrer"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-ups-brown/50 to-transparent" />
+                <div className="absolute bottom-8 left-8 right-8">
+                  <div className="bg-white/10 backdrop-blur-md p-6 rounded-3xl border border-white/20">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="w-10 h-10 bg-ups-yellow rounded-xl flex items-center justify-center">
+                        <Globe className="text-ups-brown w-5 h-5" />
+                      </div>
+                      <div>
+                        <h4 className="text-white font-bold text-lg">Air Freight</h4>
+                        <p className="text-white/60 text-xs">Global reach within hours</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              <span className="inline-block px-4 py-1.5 bg-ups-yellow/10 text-ups-brown text-[10px] font-bold uppercase tracking-widest rounded-full mb-6 border border-ups-yellow/20">
+                By Air
+              </span>
+              <h2 className="text-4xl sm:text-5xl font-black text-ups-brown tracking-tight leading-[1.1] mb-6">
+                Fly your cargo <br />
+                <span className="text-ups-yellow-dark">anywhere in the world.</span>
+              </h2>
+              <p className="text-gray-600 text-base sm:text-lg leading-relaxed mb-8">
+                From urgent documents to heavy machinery, our air freight network spans 220+ countries with guaranteed next-day delivery for priority shipments.
+              </p>
+              <div className="grid grid-cols-2 gap-4 sm:gap-6">
+                <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100">
+                  <p className="text-2xl font-black text-ups-brown">4,200+</p>
+                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">Daily Flights</p>
+                </div>
+                <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100">
+                  <p className="text-2xl font-black text-ups-brown">12 hrs</p>
+                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">Avg Delivery</p>
+                </div>
+              </div>
             </motion.div>
           </div>
         </div>
@@ -241,6 +306,70 @@ export const Home: React.FC = () => {
                 </div>
               </motion.div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Ground Transport Section */}
+      <section className="py-24 bg-gray-50 relative overflow-hidden">
+        <div className="absolute bottom-0 left-0 w-80 h-80 bg-ups-brown rounded-full blur-[120px] opacity-5" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              <span className="inline-block px-4 py-1.5 bg-ups-yellow/10 text-ups-brown text-[10px] font-bold uppercase tracking-widest rounded-full mb-6 border border-ups-yellow/20">
+                By Land
+              </span>
+              <h2 className="text-4xl sm:text-5xl font-black text-ups-brown tracking-tight leading-[1.1] mb-6">
+                Ground fleet <br />
+                <span className="text-ups-yellow-dark">that never stops.</span>
+              </h2>
+              <p className="text-gray-600 text-base sm:text-lg leading-relaxed mb-8">
+                Our fleet of over 100,000 vehicles moves your packages across continents &#8212; from city centers to remote rural roads, with real-time GPS tracking on every mile.
+              </p>
+              <div className="grid grid-cols-2 gap-4 sm:gap-6">
+                <div className="p-4 bg-white rounded-2xl border border-gray-100">
+                  <p className="text-2xl font-black text-ups-brown">100K+</p>
+                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">Vehicles</p>
+                </div>
+                <div className="p-4 bg-white rounded-2xl border border-gray-100">
+                  <p className="text-2xl font-black text-ups-brown">99.7%</p>
+                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">On-Time Rate</p>
+                </div>
+              </div>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="relative"
+            >
+              <div className="relative rounded-[3rem] overflow-hidden shadow-2xl border-8 border-white">
+                <img
+                  src="https://images.unsplash.com/photo-1519003722824-194d4455a60c?auto=format&fit=crop&q=80&w=1200"
+                  alt="Ground Transport"
+                  className="w-full h-[500px] object-cover"
+                  referrerPolicy="no-referrer"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-ups-brown/50 to-transparent" />
+                <div className="absolute bottom-8 left-8 right-8">
+                  <div className="bg-white/10 backdrop-blur-md p-6 rounded-3xl border border-white/20">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="w-10 h-10 bg-ups-yellow rounded-xl flex items-center justify-center">
+                        <Truck className="text-ups-brown w-5 h-5" />
+                      </div>
+                      <div>
+                        <h4 className="text-white font-bold text-lg">Ground Transport</h4>
+                        <p className="text-white/60 text-xs">Reliable land delivery</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
@@ -473,6 +602,70 @@ export const Home: React.FC = () => {
               <USAHomeMap />
               <div className="absolute inset-0 pointer-events-none bg-ups-brown/5" />
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Ocean Freight Section */}
+      <section className="py-24 bg-white relative overflow-hidden">
+        <div className="absolute top-1/2 -right-20 w-96 h-96 bg-ups-yellow rounded-full blur-[150px] opacity-10" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              className="relative"
+            >
+              <div className="relative rounded-[3rem] overflow-hidden shadow-2xl border-8 border-gray-100">
+                <img
+                  src="https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?auto=format&fit=crop&q=80&w=1200"
+                  alt="Ocean Freight"
+                  className="w-full h-[500px] object-cover"
+                  referrerPolicy="no-referrer"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-ups-brown/50 to-transparent" />
+                <div className="absolute bottom-8 left-8 right-8">
+                  <div className="bg-white/10 backdrop-blur-md p-6 rounded-3xl border border-white/20">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="w-10 h-10 bg-ups-yellow rounded-xl flex items-center justify-center">
+                        <Ship className="text-ups-brown w-5 h-5" />
+                      </div>
+                      <div>
+                        <h4 className="text-white font-bold text-lg">Ocean Freight</h4>
+                        <p className="text-white/60 text-xs">Global sea routes</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              <span className="inline-block px-4 py-1.5 bg-ups-yellow/10 text-ups-brown text-[10px] font-bold uppercase tracking-widest rounded-full mb-6 border border-ups-yellow/20">
+                By Sea
+              </span>
+              <h2 className="text-4xl sm:text-5xl font-black text-ups-brown tracking-tight leading-[1.1] mb-6">
+                Shipping across <br />
+                <span className="text-ups-yellow-dark">every ocean.</span>
+              </h2>
+              <p className="text-gray-600 text-base sm:text-lg leading-relaxed mb-8">
+                Full-container loads, LCL, and specialized cargo &#8212; our ocean freight network connects every major port with end-to-end visibility and customs clearance included.
+              </p>
+              <div className="grid grid-cols-2 gap-4 sm:gap-6">
+                <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100">
+                  <p className="text-2xl font-black text-ups-brown">600+</p>
+                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">Ports Served</p>
+                </div>
+                <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100">
+                  <p className="text-2xl font-black text-ups-brown">2M+</p>
+                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">Containers/yr</p>
+                </div>
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
