@@ -28,7 +28,7 @@ import {
 } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "../lib/utils";
-import athLogo from "../athlogo.png";
+import athLogo from "../athlogo.svg";
 
 const commonCountryCoords: Record<string, { lat: number; lng: number }> = {
   "united states": { lat: 37.0902, lng: -95.7129 },
