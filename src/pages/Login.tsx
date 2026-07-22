@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { Package, Mail, Lock, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Package, Mail, Lock, ArrowRight, ShieldCheck, UserPlus } from 'lucide-react';
 
 export const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(false);
 
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -14,13 +15,32 @@ export const Login: React.FC = () => {
     setError('');
 
     try {
-      const { error: signInError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-      if (signInError) throw signInError;
-      // Hard redirect — bypasses any React Router timing race conditions
-      window.location.href = '/admin';
+      if (isSignUp) {
+        const { data, error: signUpError } = await supabase.auth.signUp({
+          email,
+          password,
+        });
+        if (signUpError) throw signUpError;
+
+        if (data.user) {
+          const { error: profileError } = await supabase.from('users').insert({
+            uid: data.user.id,
+            email: data.user.email,
+            role: 'admin',
+            display_name: email.split('@')[0],
+          });
+          if (profileError) throw profileError;
+        }
+
+        window.location.href = '/admin';
+      } else {
+        const { error: signInError } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+        if (signInError) throw signInError;
+        window.location.href = '/admin';
+      }
     } catch (err: any) {
       setError(err.message);
       setLoading(false);
@@ -35,7 +55,9 @@ export const Login: React.FC = () => {
             <Package className="text-ups-yellow w-8 h-8" />
           </div>
           <h1 className="text-2xl font-bold tracking-tight">ATH Admin Portal</h1>
-          <p className="text-ups-yellow/70 text-sm mt-2 font-medium">Sign in to manage shipments and track deliveries.</p>
+          <p className="text-ups-yellow/70 text-sm mt-2 font-medium">
+            {isSignUp ? 'Create your admin account' : 'Sign in to manage shipments and track deliveries.'}
+          </p>
         </div>
 
         <div className="p-8">
@@ -82,10 +104,20 @@ export const Login: React.FC = () => {
               disabled={loading}
               className="mt-6 w-full bg-ups-brown text-ups-yellow py-4 rounded-xl font-semibold hover:bg-ups-brown/90 transition-all flex items-center justify-center gap-2 group disabled:opacity-50 border border-ups-yellow/10"
             >
-              {loading ? 'Signing in...' : 'Sign In to Admin'}
+              {loading ? 'Processing...' : isSignUp ? 'Create Admin Account' : 'Sign In to Admin'}
               {!loading && <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />}
             </button>
           </form>
+
+          <div className="mt-6 text-center">
+            <button
+              onClick={() => { setIsSignUp(!isSignUp); setError(''); }}
+              className="text-sm text-ups-brown hover:text-ups-brown/70 font-medium transition-colors flex items-center justify-center gap-1.5 mx-auto"
+            >
+              <UserPlus className="w-4 h-4" />
+              {isSignUp ? 'Already have an account? Sign In' : 'No account? Create Admin Account'}
+            </button>
+          </div>
         </div>
       </div>
     </div>
