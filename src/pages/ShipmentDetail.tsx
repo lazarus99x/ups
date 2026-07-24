@@ -206,6 +206,13 @@ export const ShipmentDetail: React.FC = () => {
     }
   };
 
+  // Refetch when tab regains focus (covers admin update in another tab)
+  useEffect(() => {
+    const onShow = () => { if (id) fetchShipmentDetail(); };
+    document.addEventListener('visibilitychange', onShow);
+    return () => document.removeEventListener('visibilitychange', onShow);
+  }, [id]);
+
   useEffect(() => {
     fetchShipmentDetail();
     if (!id) return;
